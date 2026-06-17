@@ -18,6 +18,23 @@ body {
   @apply bg-paper text-ink antialiased dark:bg-ink dark:text-paper;
 }
 
+/* Editorial body copy shared by every section */
+.prose-editorial {
+  @apply text-lg leading-relaxed;
+}
+.prose-editorial p {
+  @apply mb-4 opacity-90;
+}
+.prose-editorial h3 {
+  @apply mb-3 mt-8 text-xl font-semibold;
+}
+.prose-editorial ul {
+  @apply mb-4 list-disc space-y-1 pl-6 opacity-90;
+}
+.prose-editorial a {
+  @apply text-accent underline underline-offset-2;
+}
+
 /* Respect reduced-motion preferences globally */
 @media (prefers-reduced-motion: reduce) {
   html {
