@@ -1,0 +1,147 @@
+/* ============================================================
+   PRESENTATION DECK — cinematic keynote slides.
+   Each slide is authored on a fixed 1280x720 design canvas and
+   scaled to fit the viewport (no scroll). Dark, clean, bold.
+============================================================ */
+.deck-root {
+  position: fixed; inset: 0; z-index: 200;
+  background: #060d18; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.deck-stage { position: relative; flex: 1; min-height: 0; display: grid; place-items: center; }
+.deck-canvas {
+  width: 1280px; height: 720px; position: relative;
+  transform-origin: center center; flex-shrink: 0;
+}
+
+/* ---- Slide base ---- */
+.slide {
+  position: absolute; inset: 0; overflow: hidden;
+  padding: 72px 84px; color: #fff;
+  display: flex; flex-direction: column;
+  background:
+    radial-gradient(1100px 700px at 88% -10%, rgba(37,99,235,.28) 0%, transparent 55%),
+    radial-gradient(800px 600px at -5% 110%, rgba(139,92,246,.18) 0%, transparent 55%),
+    linear-gradient(135deg, #0a1a30 0%, #0b2347 48%, #081526 100%);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.slide-kicker {
+  font-size: 15px; font-weight: 700; letter-spacing: .34em;
+  text-transform: uppercase; color: #6ea0ff; margin-bottom: 22px;
+}
+.slide-title {
+  font-family: 'Anton', 'Inter', sans-serif; font-weight: 400;
+  text-transform: uppercase; color: #fff;
+  font-size: 66px; line-height: .98; letter-spacing: .005em;
+  margin: 0; max-width: 17ch;
+}
+.slide-title.sm { font-size: 52px; }
+.slide-title .accent { color: #6ea0ff; }
+.slide-lead {
+  font-size: 21px; line-height: 1.5; color: rgba(255,255,255,.74);
+  max-width: 34ch; margin-top: 20px; font-weight: 400;
+}
+.slide-lead strong { color: #fff; font-weight: 700; }
+.slide-body { margin-top: 38px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+.slide-axa { position: absolute; right: 60px; bottom: 48px; opacity: .9; }
+.slide-foot { position: absolute; left: 84px; bottom: 50px; font-size: 14px; color: rgba(255,255,255,.4); letter-spacing: .04em; }
+
+/* ---- Layout: header centered (intro/media slides) ---- */
+.slide.centered { align-items: center; text-align: center; padding-top: 56px; }
+.slide.centered .slide-title { max-width: 22ch; }
+.slide.centered .slide-lead { max-width: 60ch; }
+
+/* ---- Title (opening) ---- */
+.slide-hero-tag {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(110,160,255,.16); color: #9cc0ff;
+  border: 1px solid rgba(110,160,255,.3);
+  padding: 8px 18px; border-radius: 999px; font-size: 14px; font-weight: 600;
+  letter-spacing: .06em; margin-bottom: 30px;
+}
+.slide-hero-tag::before { content:''; width:7px; height:7px; border-radius:50%; background:#6ea0ff; }
+.slide-title.mega { font-size: 104px; line-height: .92; }
+.slide-stats { display: flex; gap: 18px; margin-top: 46px; }
+.slide-stat { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 22px 26px; min-width: 200px; }
+.slide-stat-v { font-family: 'Anton'; font-size: 44px; color: #6ea0ff; line-height: 1; }
+.slide-stat-l { font-size: 14px; color: rgba(255,255,255,.6); margin-top: 8px; line-height: 1.4; }
+
+/* ---- bullets ---- */
+.cs-bullets { display: flex; flex-direction: column; gap: 18px; }
+.cs-bullet { display: flex; gap: 16px; align-items: flex-start; font-size: 24px; line-height: 1.35; color: rgba(255,255,255,.9); }
+.cs-bullet::before { content: ''; flex-shrink: 0; width: 12px; height: 12px; margin-top: 9px; border-radius: 3px; background: #6ea0ff; transform: rotate(45deg); }
+.cs-bullet b { color: #fff; }
+
+/* ---- split (before/after) ---- */
+.cs-split { display: grid; grid-template-columns: 1fr 64px 1fr; gap: 18px; align-items: center; }
+.cs-col { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 28px 30px; height: 100%; }
+.cs-col.hi { border-color: rgba(110,160,255,.55); background: rgba(37,99,235,.14); box-shadow: 0 0 0 4px rgba(110,160,255,.12); }
+.cs-col-badge { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); }
+.cs-col.hi .cs-col-badge { color: #6ea0ff; }
+.cs-col-title { font-size: 22px; font-weight: 700; margin: 8px 0 16px; color: #fff; }
+.cs-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.cs-col li { font-size: 16px; line-height: 1.4; color: rgba(255,255,255,.78); display: flex; gap: 10px; }
+.cs-col li::before { content: '–'; color: rgba(255,255,255,.4); }
+.cs-col.hi li::before { content: '✓'; color: #6ea0ff; font-weight: 700; }
+.cs-arrow { display: grid; place-items: center; font-size: 34px; color: #6ea0ff; }
+
+/* ---- grid of cards ---- */
+.cs-grid { display: grid; gap: 16px; }
+.cs-grid.c2 { grid-template-columns: repeat(2, 1fr); }
+.cs-grid.c3 { grid-template-columns: repeat(3, 1fr); }
+.cs-grid.c4 { grid-template-columns: repeat(4, 1fr); }
+.cs-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 20px 22px; }
+.cs-card-ic { font-size: 30px; display: block; margin-bottom: 12px; }
+.cs-card-t { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.25; }
+.cs-card-x { font-size: 14px; color: rgba(255,255,255,.62); margin-top: 7px; line-height: 1.4; }
+
+/* ---- numbered stepper / loops ---- */
+.cs-steps { display: grid; gap: 14px; }
+.cs-steps.c4 { grid-template-columns: repeat(4, 1fr); }
+.cs-steps.c3 { grid-template-columns: repeat(3, 1fr); }
+.cs-step { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 18px 20px; position: relative; }
+.cs-step.hi { border-color: rgba(110,160,255,.5); background: rgba(37,99,235,.14); }
+.cs-step-n { font-family: 'Anton'; font-size: 30px; color: #6ea0ff; line-height: 1; }
+.cs-step-p { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.5); margin: 10px 0 4px; }
+.cs-step-t { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.25; }
+
+/* ---- flow (nodes + arrows) ---- */
+.cs-flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
+.cs-node { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 104px; }
+.cs-node-c { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.16); }
+.cs-node-l { font-size: 12px; text-align: center; color: rgba(255,255,255,.72); line-height: 1.25; }
+.cs-arr { color: #6ea0ff; font-size: 18px; margin-bottom: 22px; }
+
+/* ---- comparison table ---- */
+.cs-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.cs-table th { text-align: left; padding: 10px 16px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #6ea0ff; border-bottom: 1px solid rgba(255,255,255,.18); }
+.cs-table td { padding: 9px 16px; color: rgba(255,255,255,.8); border-bottom: 1px solid rgba(255,255,255,.08); line-height: 1.35; vertical-align: top; }
+.cs-table td:first-child { font-weight: 700; color: #fff; white-space: nowrap; }
+.cs-table .ai { color: #9cc0ff; }
+
+/* ---- category columns (benefits) ---- */
+.cs-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.cs-cat-h { font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #6ea0ff; padding-bottom: 10px; border-bottom: 2px solid rgba(110,160,255,.4); margin-bottom: 14px; }
+.cs-cat ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.cs-cat li { font-size: 14px; line-height: 1.4; color: rgba(255,255,255,.78); display: flex; gap: 8px; }
+.cs-cat li::before { content: '→'; color: #6ea0ff; }
+
+/* ============================================================
+   INTRO CINEMATIC SLIDES
+============================================================ */
+.intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; min-height: 0; align-items: center; }
+.intro-lines { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
+.intro-lines p { font-size: 22px; color: rgba(255,255,255,.85); line-height: 1.45; margin: 0; }
+.intro-lines .muted { color: rgba(255,255,255,.6); }
+.intro-stack { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.intro-shot { border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.12); background: #fff; }
+.intro-shot img { width: 100%; display: block; }
+.intro-bubble { align-self: flex-start; background: #5b50e6; color: #fff; font-size: 18px; font-weight: 600; padding: 14px 22px; border-radius: 16px 16px 16px 4px; box-shadow: 0 16px 40px rgba(91,80,230,.4); }
+.intro-bubble.r { align-self: flex-end; border-radius: 16px 16px 4px 16px; }
+
+/* media (image/video) centered slide */
+.media-frame { border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); max-height: 360px; background: #000; }
+.media-frame img, .media-frame video { display: block; width: 100%; height: 100%; max-height: 360px; object-fit: cover; }
+.media-caption { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 30px; color: #fff; margin-top: 26px; line-height: 1.35; }
+.media-caption.lines { font-size: 24px; }
+.media-caption.lines p { margin: 4px 0; }
