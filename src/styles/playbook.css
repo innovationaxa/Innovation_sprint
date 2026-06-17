@@ -3,7 +3,6 @@
    Tokens + component classes, extended with a dark-mode override.
    React components emit these same class names with real content.
 ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,800;1,800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   --bg:              #f7f4ee;
@@ -361,3 +360,78 @@ h3 { font-size:1.22rem; font-weight:700; letter-spacing:-.01em; color:var(--text
   .step-n { font-size:1.45rem; }
   .step:not(:last-child)::after { left:30px; }
 }
+
+/* ============================================================
+   6 BOUCLES — VISION END-TO-END
+============================================================ */
+h4 { font-size:.98rem; font-weight:600; color:var(--text); }
+.boucles-intro { max-width:var(--text-w); font-size:.97rem; color:var(--text-secondary); line-height:1.75; margin-top:var(--sp-lg); }
+.boucle-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:var(--sp-lg); margin-top:var(--sp-2xl); }
+.boucle-card { background:var(--surface); border-radius:var(--r); box-shadow:var(--shadow); border:1.5px solid var(--border-light); overflow:hidden; transition:box-shadow .2s, transform .2s; }
+.boucle-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.boucle-card.bc-critical { border-color:var(--primary); }
+.boucle-header { display:flex; align-items:center; gap:.85rem; padding:.95rem 1.2rem; border-bottom:1px solid var(--border-light); }
+.bc-critical .boucle-header { background:var(--primary-mid); }
+.boucle-num { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:800; flex-shrink:0; background:var(--primary); color:#fff; }
+.boucle-card:nth-child(2) .boucle-num { background:#6366f1; }
+.boucle-card:nth-child(3) .boucle-num { background:#8b5cf6; }
+.boucle-card:nth-child(4) .boucle-num { background:#dc2626; }
+.boucle-card:nth-child(5) .boucle-num { background:#d97706; }
+.boucle-card:nth-child(6) .boucle-num { background:#059669; }
+.boucle-name { font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); line-height:1.35; }
+.boucle-name strong { display:block; font-size:1.05rem; text-transform:none; letter-spacing:0; color:var(--text); }
+.boucle-body { padding:1rem 1.2rem 1.1rem; display:flex; flex-direction:column; gap:.7rem; }
+.boucle-row { display:flex; gap:.55rem; align-items:flex-start; }
+.boucle-tag { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:.18rem .5rem; border-radius:4px; flex-shrink:0; margin-top:.1rem; white-space:nowrap; }
+.bt-in { background:#e0e7ff; color:#4338ca; } .bt-ia { background:#dbeafe; color:#1d4ed8; } .bt-hum { background:#ede9fe; color:#7c3aed; } .bt-out { background:#d1fae5; color:#065f46; }
+.boucle-row p { font-size:.87rem; color:var(--text-secondary); line-height:1.55; margin:0; }
+.boucle-crit-tag { display:inline-flex; align-items:center; gap:.3rem; font-size:.72rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; background:#fee2e2; color:#dc2626; padding:.22rem .65rem; border-radius:20px; margin-bottom:.4rem; }
+.boucle-crit-tag.warn { background:#fef3c7; color:#b45309; }
+
+/* Recap table */
+.recap-table-wrap { overflow-x:auto; margin-top:var(--sp-2xl); border-radius:var(--r); box-shadow:var(--shadow); }
+.recap-table { width:100%; border-collapse:collapse; font-size:.87rem; background:var(--surface); }
+.recap-table thead tr { background:var(--primary); color:#fff; }
+.recap-table thead th { padding:.75rem 1rem; text-align:left; font-weight:700; font-size:.8rem; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+.recap-table tbody tr { border-bottom:1px solid var(--border-light); }
+.recap-table tbody tr:last-child { border-bottom:none; }
+.recap-table tbody tr:hover { background:var(--bg); }
+.recap-table td { padding:.7rem 1rem; color:var(--text-secondary); line-height:1.4; }
+.recap-table td:first-child { font-weight:700; color:var(--text); white-space:nowrap; }
+.recap-table td .badge-row { display:inline-block; background:var(--primary-light); color:var(--primary); font-weight:700; font-size:.75rem; padding:.1rem .45rem; border-radius:4px; }
+
+/* Formule chain */
+.formule-chain { display:flex; flex-wrap:wrap; align-items:center; gap:.4rem; padding:var(--sp-lg) var(--sp-xl); background:var(--text); border-radius:var(--r); margin-top:var(--sp-xl); }
+.fc-step { display:flex; align-items:center; gap:.4rem; }
+.fc-pill { font-size:.78rem; font-weight:700; letter-spacing:.03em; padding:.32rem .8rem; border-radius:20px; background:rgba(255,255,255,.12); color:#fff; white-space:nowrap; }
+.fc-pill.fc-accent { background:var(--primary); }
+.fc-arr { color:rgba(255,255,255,.4); font-size:1rem; }
+.fc-loop { color:#93c5fd; font-size:.78rem; font-style:italic; font-weight:600; padding:.32rem .8rem; }
+@media(max-width:768px) { .boucle-grid { grid-template-columns:1fr; } }
+
+/* Extra callout variant used by migrated content */
+.c-info { background:linear-gradient(135deg,var(--primary-light) 0%,var(--primary-mid) 100%); border:1px solid var(--primary-mid); }
+
+/* ============================================================
+   VOIX & DELIVERY
+============================================================ */
+.voice-chain { display:flex; align-items:center; flex-wrap:wrap; gap:.35rem; margin:var(--sp-lg) 0; padding:var(--sp-lg) var(--sp-xl); background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); box-shadow:var(--shadow-sm); overflow-x:auto; }
+.vc-step { display:flex; flex-direction:column; align-items:center; gap:.3rem; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-lg); padding:.55rem .9rem; font-size:.75rem; font-weight:600; color:var(--text-secondary); text-align:center; white-space:nowrap; min-width:90px; transition:all .18s; }
+.vc-step:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
+.vc-step span { font-size:1rem; }
+.vc-arr { color:var(--primary); font-size:.95rem; flex-shrink:0; }
+.vc-highlight { border-color:var(--primary); background:var(--primary-light); color:var(--primary); }
+.formule-box { background:#1e1b18; border-radius:var(--r-lg); padding:var(--sp-lg) var(--sp-xl); margin:var(--sp-md) 0; }
+.formule-box p { font-family:'JetBrains Mono','Fira Code',monospace; font-size:.83rem; color:#93c5fd; line-height:2; margin:0; }
+.formule-box p + p { margin-top:.5rem; }
+.formule-comment { color:#9ca3af !important; }
+.output-list { display:flex; flex-wrap:wrap; gap:.5rem; margin:var(--sp-md) 0; }
+.output-tag { background:var(--primary-light); border:1px solid var(--primary-mid); border-radius:var(--r-full); padding:.28rem .75rem; font-size:.75rem; font-weight:600; color:var(--primary); }
+.govern-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:var(--sp-sm); margin-top:var(--sp-lg); }
+.govern-item { background:var(--surface); border:1px solid #fcd34d; border-radius:var(--r-lg); padding:var(--sp-md); font-size:.85rem; color:var(--text-secondary); line-height:1.5; display:flex; gap:.55rem; align-items:flex-start; }
+.govern-dot { width:7px; height:7px; border-radius:50%; background:#d97706; flex-shrink:0; margin-top:.42rem; }
+.struct-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); overflow:hidden; box-shadow:var(--shadow-sm); margin-top:var(--sp-lg); }
+.struct-head { background:var(--bg-warm); padding:.7rem var(--sp-lg); font-size:.75rem; font-weight:700; color:var(--text-secondary); letter-spacing:.06em; text-transform:uppercase; border-bottom:1px solid var(--border); }
+.struct-body { padding:var(--sp-lg) var(--sp-xl); display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.4rem .65rem; }
+.struct-item { font-size:.83rem; color:var(--text-secondary); display:flex; gap:.5rem; align-items:baseline; }
+.struct-num { font-size:.7rem; font-weight:700; color:var(--primary); min-width:1.4rem; }
