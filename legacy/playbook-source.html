@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-First Delivery Sprint — Playbook Innovation Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      /* Couleurs */
+      --bg:              #f7f4ee;
+      --bg-warm:         #f0ece2;
+      --surface:         #ffffff;
+      --surface-warm:    #faf8f4;
+
+      --primary:         #2563eb;
+      --primary-light:   #dbeafe;
+      --primary-mid:     rgba(37,99,235,.12);
+
+      --secondary:       #6366f1;
+      --secondary-light: #e0e7ff;
+
+      --accent:          #8b5cf6;
+      --accent-light:    #ede9fe;
+
+      --success:         #059669;
+      --warning:         #d97706;
+      --danger:          #dc2626;
+
+      --text:            #1e1b18;
+      --text-secondary:  #4b5563;
+      --text-muted:      #9ca3af;
+
+      --border:          #e5e0d6;
+      --border-light:    #f0ece4;
+
+      /* Ombres */
+      --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
+      --shadow-sm: 0 1px 6px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+      --shadow:    0 4px 16px rgba(0,0,0,.07), 0 2px 6px rgba(0,0,0,.04);
+      --shadow-md: 0 8px 32px rgba(0,0,0,.09), 0 4px 12px rgba(0,0,0,.05);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,.11), 0 6px 16px rgba(0,0,0,.06);
+
+      /* Rayons */
+      --r-sm:   6px;
+      --r:      12px;
+      --r-lg:   16px;
+      --r-xl:   24px;
+      --r-full: 9999px;
+
+      /* Espacement */
+      --sp-xs:  .5rem;
+      --sp-sm:  1rem;
+      --sp-md:  1.5rem;
+      --sp-lg:  2rem;
+      --sp-xl:  3rem;
+      --sp-2xl: 4rem;
+      --sp-3xl: 6rem;
+
+      /* Layout */
+      --max-w:   1100px;
+      --text-w:  720px;
+
+      /* Typographie */
+      --font:    'Inter', system-ui, -apple-system, sans-serif;
+      --font-d:  'Playfair Display', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       BARRE DE PROGRESSION
+    ============================================================ */
+    .prog {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      z-index: 300; transition: width .1s linear;
+    }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(247,244,238,.93);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 58px; padding: 0 var(--sp-lg); gap: var(--sp-sm);
+    }
+    .nav-brand {
+      font-weight: 800; font-size: .88rem; color: var(--primary);
+      text-decoration: none; letter-spacing: -.02em; white-space: nowrap;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: .15rem;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-link {
+      font-size: .75rem; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; padding: .32rem .6rem; border-radius: var(--r-sm);
+      white-space: nowrap; transition: all .18s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary); background: var(--primary-light);
+    }
+
+    /* ============================================================
+       SECTIONS
+    ============================================================ */
+    .section { padding: var(--sp-3xl) var(--sp-lg); }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; }
+    .section-alt   { background: var(--surface); }
+    .section-warm  { background: var(--bg-warm); }
+
+    /* ============================================================
+       TYPOGRAPHIE ÉDITORIALE
+    ============================================================ */
+    .label {
+      display: block; font-size: .7rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: var(--sp-sm);
+    }
+    .section-title {
+      font-family: var(--font-d);
+      font-size: clamp(1.9rem, 3.8vw, 2.75rem);
+      font-weight: 800; line-height: 1.13; letter-spacing: -.025em;
+      color: var(--text); margin-bottom: var(--sp-md);
+    }
+    .section-sub {
+      font-size: 1.05rem; color: var(--text-secondary);
+      max-width: 640px; line-height: 1.65;
+    }
+    .sh { margin-bottom: var(--sp-xl); }
+    .sh.centered { text-align: center; }
+    .sh.centered .section-sub { margin: 0 auto; }
+
+    p { color: var(--text-secondary); line-height: 1.7; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      padding: calc(var(--sp-3xl)*1.25) var(--sp-lg) var(--sp-3xl);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; top:-120px; right:-180px;
+      width:700px; height:700px; pointer-events:none;
+      background: radial-gradient(circle, rgba(37,99,235,.07) 0%, transparent 70%);
+    }
+    .hero::after {
+      content:''; position:absolute; bottom:-60px; left:-80px;
+      width:450px; height:450px; pointer-events:none;
+      background: radial-gradient(circle, rgba(139,92,246,.055) 0%, transparent 70%);
+    }
+    .hero-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index:1; }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--primary-light); color: var(--primary);
+      font-size: .76rem; font-weight: 600; padding: .3rem .85rem;
+      border-radius: var(--r-full); margin-bottom: var(--sp-md);
+      letter-spacing: .03em;
+    }
+    .hero-tag::before {
+      content:''; width:6px; height:6px;
+      background: var(--primary); border-radius:50%;
+    }
+
+    .hero-title {
+      font-family: var(--font-d);
+      font-size: clamp(2.7rem, 6vw, 4.6rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -.035em; color: var(--text);
+      margin-bottom: var(--sp-md); max-width: 860px;
+    }
+    .hero-title em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 1.18rem; color: var(--text-secondary);
+      max-width: 640px; line-height: 1.65; margin-bottom: var(--sp-xl);
+    }
+
+    .hero-quote {
+      display: inline-flex; align-items: flex-start; gap: var(--sp-sm);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: var(--sp-md) var(--sp-lg);
+      margin-bottom: var(--sp-2xl); box-shadow: var(--shadow-sm);
+      max-width: 680px;
+    }
+    .hero-quote-icon { font-size: 1.4rem; flex-shrink:0; margin-top:.05rem; }
+    .hero-quote-text {
+      font-size: .95rem; font-weight: 500; color: var(--text);
+      font-style: italic; line-height: 1.6;
+    }
+
+    .hero-metrics {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-md); max-width: 840px;
+    }
+    .metric-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: var(--sp-lg);
+      box-shadow: var(--shadow-sm); transition: box-shadow .2s;
+    }
+    .metric-card:hover { box-shadow: var(--shadow-md); }
+    .metric-val {
+      font-family: var(--font-d); font-size: 2.6rem;
+      font-weight: 800; color: var(--primary);
+      line-height: 1; margin-bottom: .35rem;
+    }
+    .metric-lbl {
+      font-size: .87rem; font-weight: 500;
+      color: var(--text-secondary); line-height: 1.4;
+    }
+
+    /* ============================================================
+       PARADIGME
+    ============================================================ */
+    .paradigm-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: var(--sp-md); align-items: center;
+      margin-top: var(--sp-2xl);
+    }
+    .paradigm-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r-xl); padding: var(--sp-xl);
+      box-shadow: var(--shadow-sm);
+    }
+    .paradigm-card.before { opacity: .72; }
+    .paradigm-card.after {
+      border-color: var(--primary); border-width: 2px;
+      box-shadow: 0 0 0 5px var(--primary-light), var(--shadow-md);
+    }
+    .p-badge {
+      display: inline-block; font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .22rem .6rem; border-radius: var(--r-full); margin-bottom: var(--sp-md);
+    }
+    .before .p-badge { background:#f3f4f6; color:#6b7280; }
+    .after  .p-badge { background: var(--primary-light); color: var(--primary); }
+    .p-title { font-size: 1.35rem; font-weight:700; margin-bottom: var(--sp-md); }
+    .p-list { list-style:none; display:flex; flex-direction:column; gap:.55rem; }
+    .p-list li {
+      display:flex; gap:.6rem; font-size:.9rem;
+      color:var(--text-secondary); line-height:1.45;
+    }
+    .p-list li::before {
+      flex-shrink:0; width:18px; height:18px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:50%; font-size:.68rem; font-weight:700; margin-top:.1rem;
+    }
+    .before .p-list li::before { content:'–'; background:#f3f4f6; color:#9ca3af; }
+    .after  .p-list li::before { content:'✓'; background:var(--primary-light); color:var(--primary); }
+
+    .p-arrow {
+      display:flex; flex-direction:column; align-items:center;
+      gap:.4rem; color:var(--primary);
+    }
+    .p-arrow-icon { font-size:2rem; }
+    .p-arrow-lbl {
+      font-size:.68rem; font-weight:700; color:var(--primary);
+      letter-spacing:.07em; text-transform:uppercase; text-align:center;
+    }
+
+    /* ============================================================
+       CARDS GRILLE
+    ============================================================ */
+    .cards-grid {
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap: var(--sp-md); margin-top: var(--sp-2xl);
+    }
+    .card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl);
+      box-shadow:var(--shadow-sm); transition:all .22s;
+      position:relative; overflow:hidden;
+    }
+    .card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .card-bar {
+      position:absolute; top:0; left:0; right:0; height:3px;
+      border-radius:var(--r-xl) var(--r-xl) 0 0;
+    }
+    .bar-blue   { background:var(--primary); }
+    .bar-indigo { background:var(--secondary); }
+    .bar-violet { background:var(--accent); }
+    .bar-green  { background:var(--success); }
+    .bar-orange { background:var(--warning); }
+
+    .card-icon {
+      width:46px; height:46px; border-radius:var(--r);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.35rem; margin-bottom:var(--sp-md);
+    }
+    .ic-blue   { background:var(--primary-light); }
+    .ic-indigo { background:var(--secondary-light); }
+    .ic-violet { background:var(--accent-light); }
+    .ic-green  { background:#d1fae5; }
+    .ic-orange { background:#fef3c7; }
+    .ic-rose   { background:#fce7f3; }
+    .ic-teal   { background:#ccfbf1; }
+
+    .card-title { font-size:1.03rem; font-weight:700; margin-bottom:.55rem; line-height:1.3; }
+    .card-text  { font-size:.9rem; color:var(--text-secondary); line-height:1.65; }
+
+    /* ============================================================
+       AGENTS
+    ============================================================ */
+    .agents-grid {
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(205px,1fr));
+      gap:var(--sp-sm); margin-top:var(--sp-xl);
+    }
+    .agent-chip {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-lg); padding:var(--sp-md);
+      display:flex; align-items:center; gap:.75rem;
+      box-shadow:var(--shadow-sm); transition:all .2s;
+    }
+    .agent-chip:hover {
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px var(--primary-light);
+    }
+    .agent-av {
+      width:36px; height:36px; border-radius:var(--r);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; flex-shrink:0;
+    }
+    .agent-name { font-size:.87rem; font-weight:700; color:var(--text); line-height:1.3; }
+    .agent-role { font-size:.73rem; color:var(--text-muted); }
+
+    /* Fiche agent */
+    .fiche {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl);
+      box-shadow:var(--shadow); margin-top:var(--sp-xl);
+    }
+    .fiche-head {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:var(--sp-md); padding-bottom:var(--sp-md);
+      border-bottom:1px solid var(--border-light); margin-bottom:var(--sp-md);
+    }
+    .fiche-badge {
+      background:var(--primary-light); color:var(--primary);
+      font-size:.7rem; font-weight:700; padding:.22rem .6rem;
+      border-radius:var(--r-full); letter-spacing:.06em;
+      text-transform:uppercase; white-space:nowrap;
+    }
+    .fiche-props {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr));
+      gap:var(--sp-sm); margin-bottom:var(--sp-md);
+    }
+    .fp { background:var(--bg); border-radius:var(--r); padding:.7rem var(--sp-sm); }
+    .fp-lbl { font-size:.7rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.25rem; }
+    .fp-val { font-size:.87rem; color:var(--text); font-weight:500; }
+
+    /* ============================================================
+       PROMPT BLOCK
+    ============================================================ */
+    .pb { background:#1e1b18; border-radius:var(--r-lg); overflow:hidden; margin:var(--sp-md) 0; }
+    .pb-head {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.55rem var(--sp-md);
+      background:rgba(255,255,255,.05);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .pb-lbl { font-size:.68rem; font-weight:600; color:rgba(255,255,255,.38); letter-spacing:.08em; text-transform:uppercase; }
+    .pb-copy {
+      font-size:.7rem; color:rgba(255,255,255,.38); cursor:pointer;
+      padding:.18rem .45rem; border-radius:4px;
+      background:rgba(255,255,255,.06); border:none; transition:all .2s;
+    }
+    .pb-copy:hover { color:#fff; background:rgba(255,255,255,.13); }
+    .pb pre { margin:0; padding:var(--sp-md); overflow-x:auto; }
+    .pb code {
+      font-family:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+      font-size:.82rem; line-height:1.75; color:#e2e8f0; white-space:pre-wrap;
+    }
+
+    /* ============================================================
+       SKILLS LIBRARY
+    ============================================================ */
+    .skills-lib {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(155px,1fr));
+      gap:var(--sp-sm); margin-top:var(--sp-xl);
+    }
+    .skill-tile {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-lg); padding:var(--sp-md);
+      text-align:center; box-shadow:var(--shadow-sm);
+      transition:all .2s; cursor:default;
+    }
+    .skill-tile:hover {
+      border-color:var(--secondary);
+      box-shadow:0 0 0 3px var(--secondary-light);
+      transform:translateY(-2px);
+    }
+    .st-icon { font-size:1.75rem; display:block; margin-bottom:.45rem; }
+    .st-name { font-size:.82rem; font-weight:600; color:var(--text); }
+
+    /* ============================================================
+       STACK
+    ============================================================ */
+    .stack-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(175px,1fr));
+      gap:var(--sp-sm); margin-top:var(--sp-xl);
+    }
+    .stack-item {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-lg); padding:var(--sp-md);
+      text-align:center; box-shadow:var(--shadow-sm); transition:all .2s;
+    }
+    .stack-item:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .si-icon { font-size:2rem; display:block; margin-bottom:.55rem; }
+    .si-name { font-size:.87rem; font-weight:700; color:var(--text); display:block; margin-bottom:.25rem; }
+    .si-desc { font-size:.75rem; color:var(--text-muted); line-height:1.4; }
+
+    /* BOUCLE CONNECTÉE */
+    .loop-wrap {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl);
+      box-shadow:var(--shadow-sm); margin-top:var(--sp-xl);
+      overflow-x:auto;
+    }
+    .loop {
+      display:flex; align-items:center; justify-content:flex-start;
+      gap:0; padding:var(--sp-md) 0; min-width:700px;
+    }
+    .loop-step { display:flex; flex-direction:column; align-items:center; gap:.45rem; min-width:82px; }
+    .loop-node {
+      width:70px; height:70px; border-radius:var(--r-lg);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.35rem; box-shadow:var(--shadow-sm);
+      border:1px solid var(--border); background:var(--surface);
+      transition:all .2s; cursor:default;
+    }
+    .loop-node:hover { box-shadow:var(--shadow-md); transform:scale(1.07); }
+    .loop-lbl { font-size:.68rem; font-weight:600; color:var(--text-secondary); text-align:center; line-height:1.3; max-width:78px; }
+    .loop-arr { font-size:1.1rem; color:var(--primary); padding:0 .2rem; flex-shrink:0; margin-bottom:1.5rem; }
+
+    /* ============================================================
+       STEPPER
+    ============================================================ */
+    .stepper { margin-top:var(--sp-2xl); display:flex; flex-direction:column; gap:0; }
+    .step {
+      display:grid; grid-template-columns:82px 1fr;
+      gap:var(--sp-lg); position:relative;
+    }
+    .step:not(:last-child)::after {
+      content:''; position:absolute;
+      left:40px; top:82px; bottom:0; width:2px;
+      background:linear-gradient(to bottom, var(--primary) 0%, var(--border) 100%);
+    }
+    .step-num-wrap { display:flex; flex-direction:column; align-items:center; }
+    .step-num-box {
+      width:80px; height:80px; border-radius:var(--r-xl);
+      background:var(--surface); border:2px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      flex-direction:column; box-shadow:var(--shadow-sm);
+      flex-shrink:0; transition:all .2s;
+    }
+    .step:hover .step-num-box { border-color:var(--primary); background:var(--primary-light); }
+    .step-n {
+      font-family:var(--font-d); font-size:1.85rem;
+      font-weight:800; color:var(--primary); line-height:1;
+    }
+    .step-body {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl);
+      box-shadow:var(--shadow-sm); margin-bottom:var(--sp-lg);
+      transition:all .2s;
+    }
+    .step:hover .step-body { box-shadow:var(--shadow-md); }
+    .step-phase { font-size:.69rem; font-weight:700; color:var(--primary); letter-spacing:.1em; text-transform:uppercase; margin-bottom:.4rem; }
+    .step-title { font-size:1.18rem; font-weight:700; color:var(--text); margin-bottom:var(--sp-sm); }
+    .step-desc { font-size:.92rem; color:var(--text-secondary); line-height:1.65; margin-bottom:var(--sp-md); }
+    .step-tags { display:flex; flex-wrap:wrap; gap:.45rem; }
+    .stag {
+      background:var(--bg); border:1px solid var(--border);
+      border-radius:var(--r-full); font-size:.73rem;
+      font-weight:500; color:var(--text-secondary); padding:.22rem .6rem;
+    }
+
+    /* ============================================================
+       CALLOUT
+    ============================================================ */
+    .callout {
+      border-radius:var(--r-lg); padding:var(--sp-lg);
+      margin:var(--sp-md) 0; display:flex; gap:var(--sp-sm);
+    }
+    .c-rule {
+      background:linear-gradient(135deg,var(--primary-light) 0%,rgba(99,102,241,.07) 100%);
+      border:1px solid rgba(37,99,235,.2);
+    }
+    .c-warn {
+      background:linear-gradient(135deg,#fef9c3 0%,#fef3c7 100%);
+      border:1px solid #fcd34d;
+    }
+    .c-insight {
+      background:linear-gradient(135deg,var(--accent-light) 0%,rgba(139,92,246,.05) 100%);
+      border:1px solid rgba(139,92,246,.22);
+    }
+    .c-icon { font-size:1.2rem; flex-shrink:0; margin-top:.1rem; }
+    .c-title { font-size:.87rem; font-weight:700; color:var(--text); margin-bottom:.28rem; }
+    .c-text  { font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
+
+    /* ============================================================
+       TABLE
+    ============================================================ */
+    .table-wrap {
+      overflow-x:auto; border-radius:var(--r-xl);
+      box-shadow:var(--shadow-sm); border:1px solid var(--border);
+      margin-top:var(--sp-xl);
+    }
+    table { width:100%; border-collapse:collapse; background:var(--surface); }
+    thead { background:var(--bg-warm); }
+    th {
+      text-align:left; padding:var(--sp-md) var(--sp-lg);
+      font-size:.75rem; font-weight:700; letter-spacing:.06em;
+      text-transform:uppercase; color:var(--text-secondary);
+      border-bottom:1px solid var(--border);
+    }
+    td {
+      padding:var(--sp-md) var(--sp-lg); font-size:.9rem;
+      color:var(--text-secondary); border-bottom:1px solid var(--border-light);
+      vertical-align:top; line-height:1.5;
+    }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:var(--bg); }
+    td.td-h { font-weight:600; color:var(--text); }
+    td.td-ai { color:var(--primary); }
+
+    /* ============================================================
+       RÈGLES
+    ============================================================ */
+    .rules-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+      gap:var(--sp-md); margin-top:var(--sp-xl);
+    }
+    .rule-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-left:4px solid var(--primary);
+      border-radius:0 var(--r-lg) var(--r-lg) 0;
+      padding:var(--sp-lg); box-shadow:var(--shadow-sm);
+    }
+    .r-num { font-size:.68rem; font-weight:700; color:var(--primary); letter-spacing:.1em; text-transform:uppercase; margin-bottom:.35rem; }
+    .r-title { font-size:1rem; font-weight:700; color:var(--text); margin-bottom:.45rem; }
+    .r-text { font-size:.87rem; color:var(--text-secondary); line-height:1.6; }
+
+    /* ============================================================
+       BÉNÉFICES
+    ============================================================ */
+    .benefits-grid {
+      display:grid; grid-template-columns:repeat(2,1fr);
+      gap:var(--sp-md); margin-top:var(--sp-xl);
+    }
+    .benefit-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl); box-shadow:var(--shadow-sm);
+    }
+    .b-cat {
+      font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+      margin-bottom:var(--sp-md); padding-bottom:var(--sp-sm);
+      border-bottom:2px solid var(--border);
+    }
+    .b-cat.bi { color:var(--primary); border-color:var(--primary); }
+    .b-cat.bd { color:var(--secondary); border-color:var(--secondary); }
+    .b-cat.bo { color:var(--accent); border-color:var(--accent); }
+    .b-cat.bb { color:var(--success); border-color:var(--success); }
+    .b-list { list-style:none; display:flex; flex-direction:column; gap:.55rem; }
+    .b-list li {
+      display:flex; gap:.55rem; font-size:.9rem;
+      color:var(--text-secondary); align-items:flex-start; line-height:1.5;
+    }
+    .b-list li::before { content:'→'; color:var(--primary); font-weight:700; flex-shrink:0; margin-top:.05rem; }
+
+    /* ============================================================
+       UX PHASES
+    ============================================================ */
+    .ux-phases {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(245px,1fr));
+      gap:var(--sp-sm); margin-top:var(--sp-xl);
+    }
+    .ux-phase {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-lg); padding:var(--sp-lg); box-shadow:var(--shadow-sm);
+    }
+    .up-n {
+      width:26px; height:26px; background:var(--primary); color:#fff;
+      border-radius:var(--r-sm); display:flex; align-items:center;
+      justify-content:center; font-size:.76rem; font-weight:700; margin-bottom:.7rem;
+    }
+    .up-t { font-size:.9rem; font-weight:700; color:var(--text); margin-bottom:.45rem; }
+    .up-d { font-size:.84rem; color:var(--text-secondary); line-height:1.6; }
+
+    /* ============================================================
+       LIVRABLES
+    ============================================================ */
+    .deliv-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(275px,1fr));
+      gap:var(--sp-md); margin-top:var(--sp-xl);
+    }
+    .deliv-group {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:var(--sp-xl); box-shadow:var(--shadow-sm);
+    }
+    .dg-head { display:flex; align-items:center; gap:.7rem; margin-bottom:var(--sp-md); }
+    .dg-icon { font-size:1.4rem; }
+    .dg-title { font-size:1rem; font-weight:700; color:var(--text); }
+    .dg-list { list-style:none; display:flex; flex-direction:column; gap:.45rem; }
+    .dg-list li { display:flex; gap:.45rem; font-size:.87rem; color:var(--text-secondary); align-items:flex-start; }
+    .dg-list li::before { content:'▸'; color:var(--primary); flex-shrink:0; font-size:.68rem; margin-top:.3rem; }
+
+    /* ============================================================
+       HIGHLIGHT BOX
+    ============================================================ */
+    .hbox {
+      background:linear-gradient(135deg,var(--primary-light) 0%,rgba(99,102,241,.07) 100%);
+      border:1px solid rgba(37,99,235,.2); border-radius:var(--r-xl);
+      padding:var(--sp-xl); margin-top:var(--sp-xl);
+    }
+    .hbox p { font-size:.98rem; color:var(--text); font-weight:500; line-height:1.7; }
+
+    /* ============================================================
+       CONCLUSION
+    ============================================================ */
+    .conclusion {
+      background:linear-gradient(135deg,#1e1b18 0%,#1e293b 100%);
+      padding:var(--sp-3xl) var(--sp-lg); text-align:center;
+    }
+    .concl-inner { max-width:800px; margin:0 auto; }
+    .concl-label {
+      display:inline-block; background:rgba(37,99,235,.22);
+      color:#93c5fd; font-size:.7rem; font-weight:700;
+      letter-spacing:.12em; text-transform:uppercase;
+      padding:.3rem .85rem; border-radius:var(--r-full); margin-bottom:var(--sp-lg);
+    }
+    .concl-title {
+      font-family:var(--font-d);
+      font-size:clamp(2rem,4.2vw,3.1rem);
+      font-weight:800; color:#fff; line-height:1.12;
+      letter-spacing:-.025em; margin-bottom:var(--sp-lg);
+    }
+    .concl-text { font-size:1.03rem; color:rgba(255,255,255,.62); line-height:1.7; margin-bottom:var(--sp-xl); }
+    .concl-quote {
+      font-size:1.12rem; font-style:italic; color:rgba(255,255,255,.88);
+      border-left:3px solid var(--primary); padding-left:var(--sp-lg);
+      text-align:left; margin:var(--sp-xl) 0; line-height:1.68;
+    }
+    .concl-stats {
+      display:flex; flex-wrap:wrap; justify-content:center;
+      gap:var(--sp-sm); margin-top:var(--sp-xl);
+    }
+    .cstat {
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:var(--r-lg); padding:var(--sp-md) var(--sp-lg); text-align:left; min-width:195px;
+    }
+    .cstat-lbl { font-size:.68rem; color:rgba(255,255,255,.38); font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.35rem; }
+    .cstat-val { font-size:1.55rem; font-weight:800; color:#fff; }
+    .cstat-sub { font-size:.77rem; color:rgba(255,255,255,.45); margin-top:.25rem; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer { padding:var(--sp-lg) var(--sp-lg); background:#1e1b18; border-top:1px solid rgba(255,255,255,.06); }
+    .footer-inner {
+      max-width:var(--max-w); margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between; gap:var(--sp-md);
+    }
+    .f-brand { font-size:.87rem; font-weight:700; color:rgba(255,255,255,.45); }
+    .f-text  { font-size:.76rem; color:rgba(255,255,255,.28); }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media(max-width:860px) {
+      .paradigm-grid { grid-template-columns:1fr; }
+      .p-arrow { transform:rotate(90deg); margin:0 auto; }
+      .two-col { grid-template-columns:1fr; }
+      .benefits-grid { grid-template-columns:1fr; }
+      .hero-metrics { grid-template-columns:1fr; }
+    }
+    @media(max-width:640px) {
+      :root { --sp-3xl:4rem; }
+      .nav-links { display:none; }
+      .hero-title { font-size:2.4rem; }
+      .step { grid-template-columns:62px 1fr; }
+      .step-num-box { width:62px; height:62px; }
+      .step-n { font-size:1.45rem; }
+      .step:not(:last-child)::after { left:30px; }
+    }
+
+    /* Utilitaires */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-xl); margin-top:var(--sp-xl); align-items:start; }
+    .mt-xl  { margin-top:var(--sp-xl); }
+    .mt-lg  { margin-top:var(--sp-lg); }
+    .mt-sm  { margin-top:var(--sp-sm); }
+    h3 { font-size:1.22rem; font-weight:700; letter-spacing:-.01em; color:var(--text); line-height:1.3; }
+    h4 { font-size:.98rem; font-weight:600; color:var(--text); }
+
+    /* ============================================================
+       6 BOUCLES — VISION END-TO-END
+    ============================================================ */
+    .boucles-intro {
+      max-width:var(--text-w);
+      font-size:.97rem;
+      color:var(--text-secondary);
+      line-height:1.75;
+      margin-top:var(--sp-lg);
+    }
+    .boucle-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+      gap:var(--sp-lg);
+      margin-top:var(--sp-2xl);
+    }
+    .boucle-card {
+      background:var(--surface);
+      border-radius:var(--r);
+      box-shadow:var(--shadow);
+      border:1.5px solid var(--border-light);
+      overflow:hidden;
+      transition:box-shadow .2s, transform .2s;
+    }
+    .boucle-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+    .boucle-card.bc-critical { border-color:var(--primary); }
+    .boucle-header {
+      display:flex;
+      align-items:center;
+      gap:.85rem;
+      padding:.95rem 1.2rem;
+      border-bottom:1px solid var(--border-light);
+    }
+    .bc-critical .boucle-header { background:var(--primary-mid); }
+    .boucle-num {
+      width:38px; height:38px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; font-weight:800; flex-shrink:0;
+      background:var(--primary); color:#fff;
+    }
+    .boucle-card:nth-child(2) .boucle-num { background:#6366f1; }
+    .boucle-card:nth-child(3) .boucle-num { background:#8b5cf6; }
+    .boucle-card:nth-child(4) .boucle-num { background:#dc2626; }
+    .boucle-card:nth-child(5) .boucle-num { background:#d97706; }
+    .boucle-card:nth-child(6) .boucle-num { background:#059669; }
+    .boucle-name {
+      font-size:.82rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.06em; color:var(--text-secondary); line-height:1.35;
+    }
+    .boucle-name strong { display:block; font-size:1.05rem; text-transform:none; letter-spacing:0; color:var(--text); }
+    .boucle-body { padding:1rem 1.2rem 1.1rem; display:flex; flex-direction:column; gap:.7rem; }
+    .boucle-row { display:flex; gap:.55rem; align-items:flex-start; }
+    .boucle-tag {
+      font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+      padding:.18rem .5rem; border-radius:4px; flex-shrink:0; margin-top:.1rem;
+      white-space:nowrap;
+    }
+    .bt-in   { background:#e0e7ff; color:#4338ca; }
+    .bt-ia   { background:#dbeafe; color:#1d4ed8; }
+    .bt-hum  { background:#ede9fe; color:#7c3aed; }
+    .bt-out  { background:#d1fae5; color:#065f46; }
+    .boucle-row p { font-size:.87rem; color:var(--text-secondary); line-height:1.55; margin:0; }
+    .boucle-crit-tag {
+      display:inline-flex; align-items:center; gap:.3rem;
+      font-size:.72rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      background:#fee2e2; color:#dc2626; padding:.22rem .65rem; border-radius:20px;
+      margin-bottom:.4rem;
+    }
+    .boucle-crit-tag.warn { background:#fef3c7; color:#b45309; }
+
+    /* Recap table */
+    .recap-table-wrap { overflow-x:auto; margin-top:var(--sp-2xl); border-radius:var(--r); box-shadow:var(--shadow); }
+    .recap-table {
+      width:100%; border-collapse:collapse; font-size:.87rem;
+      background:var(--surface);
+    }
+    .recap-table thead tr { background:var(--primary); color:#fff; }
+    .recap-table thead th { padding:.75rem 1rem; text-align:left; font-weight:700; font-size:.8rem; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; }
+    .recap-table tbody tr { border-bottom:1px solid var(--border-light); }
+    .recap-table tbody tr:last-child { border-bottom:none; }
+    .recap-table tbody tr:hover { background:var(--bg); }
+    .recap-table td { padding:.7rem 1rem; color:var(--text-secondary); line-height:1.4; }
+    .recap-table td:first-child { font-weight:700; color:var(--text); white-space:nowrap; }
+    .recap-table td .badge-row { display:inline-block; background:var(--primary-light); color:var(--primary); font-weight:700; font-size:.75rem; padding:.1rem .45rem; border-radius:4px; }
+
+    /* Formule chain */
+    .formule-chain {
+      display:flex; flex-wrap:wrap; align-items:center; gap:.4rem;
+      padding:var(--sp-lg) var(--sp-xl);
+      background:var(--text); border-radius:var(--r);
+      margin-top:var(--sp-xl);
+    }
+    .fc-step {
+      display:flex; align-items:center; gap:.4rem;
+    }
+    .fc-pill {
+      font-size:.78rem; font-weight:700; letter-spacing:.03em;
+      padding:.32rem .8rem; border-radius:20px;
+      background:rgba(255,255,255,.12); color:#fff; white-space:nowrap;
+    }
+    .fc-pill.fc-accent { background:var(--primary); }
+    .fc-arr { color:rgba(255,255,255,.4); font-size:1rem; }
+    .fc-loop { color:#93c5fd; font-size:.78rem; font-style:italic; font-weight:600; padding:.32rem .8rem; }
+
+    @media(max-width:768px) {
+      .boucle-grid { grid-template-columns:1fr; }
+    }
+
+    /* ============================================================
+       VOIX & DELIVERY
+    ============================================================ */
+    .voice-chain {
+      display:flex; align-items:center; flex-wrap:wrap;
+      gap:.35rem; margin:var(--sp-lg) 0; padding:var(--sp-lg) var(--sp-xl);
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); box-shadow:var(--shadow-sm);
+      overflow-x:auto;
+    }
+    .vc-step {
+      display:flex; flex-direction:column; align-items:center; gap:.3rem;
+      background:var(--bg); border:1px solid var(--border);
+      border-radius:var(--r-lg); padding:.55rem .9rem;
+      font-size:.75rem; font-weight:600; color:var(--text-secondary);
+      text-align:center; white-space:nowrap; min-width:90px;
+      transition:all .18s;
+    }
+    .vc-step:hover { border-color:var(--primary); color:var(--primary); background:var(--primary-light); }
+    .vc-step span { font-size:1rem; }
+    .vc-arr { color:var(--primary); font-size:.95rem; flex-shrink:0; }
+    .vc-highlight { border-color:var(--primary); background:var(--primary-light); color:var(--primary); }
+
+    .formule-box {
+      background:#1e1b18; border-radius:var(--r-lg);
+      padding:var(--sp-lg) var(--sp-xl); margin:var(--sp-md) 0;
+    }
+    .formule-box p {
+      font-family:'JetBrains Mono','Fira Code',monospace;
+      font-size:.83rem; color:#93c5fd; line-height:2;
+      margin:0;
+    }
+    .formule-box p + p { margin-top:.5rem; }
+    .formule-comment { color:#4b5563 !important; }
+
+    .output-list {
+      display:flex; flex-wrap:wrap; gap:.5rem; margin:var(--sp-md) 0;
+    }
+    .output-tag {
+      background:var(--primary-light); border:1px solid rgba(37,99,235,.2);
+      border-radius:var(--r-full); padding:.28rem .75rem;
+      font-size:.75rem; font-weight:600; color:var(--primary);
+    }
+
+    .govern-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+      gap:var(--sp-sm); margin-top:var(--sp-lg);
+    }
+    .govern-item {
+      background:var(--surface); border:1px solid #fcd34d;
+      border-radius:var(--r-lg); padding:var(--sp-md);
+      font-size:.85rem; color:var(--text-secondary); line-height:1.5;
+      display:flex; gap:.55rem; align-items:flex-start;
+    }
+    .govern-dot { width:7px; height:7px; border-radius:50%; background:#d97706; flex-shrink:0; margin-top:.42rem; }
+
+    .struct-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-xl); overflow:hidden; box-shadow:var(--shadow-sm);
+      margin-top:var(--sp-lg);
+    }
+    .struct-head {
+      background:var(--bg-warm); padding:.7rem var(--sp-lg);
+      font-size:.75rem; font-weight:700; color:var(--text-secondary);
+      letter-spacing:.06em; text-transform:uppercase;
+      border-bottom:1px solid var(--border);
+    }
+    .struct-body {
+      padding:var(--sp-lg) var(--sp-xl);
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.4rem .65rem;
+    }
+    .struct-item {
+      font-size:.83rem; color:var(--text-secondary);
+      display:flex; gap:.5rem; align-items:baseline;
+    }
+    .struct-num { font-size:.7rem; font-weight:700; color:var(--primary); min-width:1.4rem; }
+  </style>
+</head>
+<body>
+
+<!-- Barre de progression -->
+<div class="prog" id="prog"></div>
+
+<!-- ============================================================
+     NAVIGATION
+============================================================ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-brand">AI-First Delivery Sprint</a>
+    <div class="nav-links">
+      <a href="#paradigme"   class="nav-link">Paradigme</a>
+      <a href="#ingredients" class="nav-link">Ingrédients</a>
+      <a href="#agents"      class="nav-link">Agents</a>
+      <a href="#stack"        class="nav-link">Stack</a>
+      <a href="#realdataproto" class="nav-link">Real Data Proto</a>
+      <a href="#recette"     class="nav-link">Recette 7 étapes</a>
+      <a href="#tests"       class="nav-link">Tests UX</a>
+      <a href="#livrables"   class="nav-link">Livrables</a>
+      <a href="#retrodoc"    class="nav-link">Rétro-doc</a>
+      <a href="#docfirst"    class="nav-link">Doc IA-first</a>
+      <a href="#voix"        class="nav-link">Voix &amp; Delivery</a>
+      <a href="#boucles"     class="nav-link">6 Boucles</a>
+      <a href="#roles"       class="nav-link">Rôles</a>
+      <a href="#regles"      class="nav-link">Règles d'or</a>
+      <a href="#benefices"   class="nav-link">Bénéfices</a>
+      <a href="#conclusion"  class="nav-link">Conclusion</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     1. HERO
+============================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">Playbook · Innovation Board</span>
+
+    <h1 class="hero-title">
+      AI-First<br><em>Delivery Sprint</em>
+    </h1>
+
+    <p class="hero-sub">
+      Passer d'une connaissance dispersée à une vision produit testable, documentée et exécutable — en réduisant radicalement le temps entre l'idée et le prototype livrable.
+    </p>
+
+    <div class="hero-quote">
+      <span class="hero-quote-icon">💡</span>
+      <span class="hero-quote-text">
+        « Ce n'est pas aller plus vite pour le plaisir. C'est aller plus vite parce que vous avez un meilleur partenaire de réflexion, d'organisation et d'exécution. »
+      </span>
+    </div>
+
+    <div class="hero-metrics">
+      <div class="metric-card">
+        <div class="metric-val">3×</div>
+        <div class="metric-lbl">plus rapide de la connaissance au prototype testable</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">7</div>
+        <div class="metric-lbl">étapes structurées — chacune produit un livrable tangible</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">∞</div>
+        <div class="metric-lbl">capitalisation continue — chaque sprint enrichit le suivant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. PARADIGME
+============================================================ -->
+<section class="section section-alt" id="paradigme">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Le changement de paradigme</span>
+      <h2 class="section-title">Avant → Maintenant</h2>
+      <p class="section-sub">L'IA ne remplace pas le Design Sprint. Elle en révèle les limites et ouvre un nouveau terrain de jeu pour les équipes produit exigeantes.</p>
+    </div>
+
+    <div class="paradigm-grid">
+      <!-- AVANT -->
+      <div class="paradigm-card before">
+        <span class="p-badge">Avant</span>
+        <div class="p-title">Design Sprint / Design Sprint Quarter</div>
+        <ul class="p-list">
+          <li>Connaissance dispersée dans des slides, e-mails, entretiens non structurés</li>
+          <li>Workshops intensifs en présentiel, difficiles à répliquer</li>
+          <li>Prototypage artisanal, dépendant de compétences rares</li>
+          <li>Documentation produite en fin de sprint, souvent abandonnée</li>
+          <li>Tests utilisateurs ponctuels, peu capitalisés</li>
+          <li>Backlog déconnecté de la vision produit</li>
+          <li>Feedback loop long : semaines entre idée et validation</li>
+        </ul>
+      </div>
+
+      <!-- FLÈCHE -->
+      <div class="p-arrow">
+        <div class="p-arrow-icon">→</div>
+        <div class="p-arrow-lbl">Transformation<br>AI-first</div>
+      </div>
+
+      <!-- MAINTENANT -->
+      <div class="paradigm-card after">
+        <span class="p-badge">Maintenant</span>
+        <div class="p-title">AI-First Delivery Sprint</div>
+        <ul class="p-list">
+          <li>Base de connaissance structurée, interrogeable, toujours disponible</li>
+          <li>Workshops augmentés : l'IA structure et synthétise en temps réel</li>
+          <li>Prototypage assisté par agents spécialisés (design, front, produit)</li>
+          <li>Documentation vivante, générée et maintenue en continu</li>
+          <li>Tests augmentés : analyse, patterns, insights atomisés</li>
+          <li>Backlog connecté au PRD, au prototype et au code</li>
+          <li>Boucle accélérée : jours entre idée et prototype publié</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout c-insight" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">⚡</span>
+      <div>
+        <div class="c-title">Le principe directeur</div>
+        <div class="c-text">L'AI-First Delivery Sprint n'est pas un outil de plus dans la boîte. C'est un changement de posture : l'IA devient partenaire de réflexion stratégique, architecte de la connaissance et accélérateur d'exécution — tout en laissant la décision et le jugement à l'humain.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. INGRÉDIENTS
+============================================================ -->
+<section class="section" id="ingredients">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Les nouveaux ingrédients</span>
+      <h2 class="section-title">Ce qui change vraiment dans la recette</h2>
+      <p class="section-sub">Sept ingrédients fondamentaux transforment la façon dont les équipes cadrent, conçoivent et livrent des produits digitaux.</p>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-blue">🗂️</div>
+        <div class="card-title">Base de connaissance projet</div>
+        <p class="card-text">Tout ce qui est su sur le domaine, les utilisateurs, la concurrence, les contraintes techniques et réglementaires est structuré, indexé et interrogeable par les agents. La connaissance cesse d'être tacite.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-indigo">🧠</div>
+        <div class="card-title">Workshops augmentés</div>
+        <p class="card-text">Les sessions de travail collectif sont transformées : l'IA prend des notes structurées, propose des synthèses en temps réel, génère des axes de design et reformule les problèmes avec une précision que le groupe seul ne peut atteindre.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-violet"></div>
+        <div class="card-icon ic-violet">🤖</div>
+        <div class="card-title">Agents spécialisés</div>
+        <p class="card-text">PM, PO, UX Researcher, Product Designer, Front-end, PRD Writer, QA — chaque rôle dispose d'un agent configuré avec les bons skills, les bonnes instructions et les bons accès. Une équipe virtuelle à la demande.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-green"></div>
+        <div class="card-icon ic-green">🔌</div>
+        <div class="card-title">Connecteurs delivery</div>
+        <p class="card-text">Linear, GitHub, Figma, Vercel, FigJam — les outils du delivery sont connectés. L'IA peut créer des tickets, pousser du code, publier un prototype et mettre à jour la documentation sans friction manuelle.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-orange"></div>
+        <div class="card-icon ic-orange">⚡</div>
+        <div class="card-title">Chaîne prototype-first</div>
+        <p class="card-text">Le prototype n'est plus une phase tardive. Il est généré dès les premières heures du sprint et affiné en continu. Chaque itération est publiée sur Vercel et testable immédiatement par les utilisateurs réels.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-teal">📖</div>
+        <div class="card-title">Documentation vivante</div>
+        <p class="card-text">PRD, specs, user stories, changelog — la documentation est générée et maintenue par les agents au fil du sprint. Elle reflète toujours l'état actuel du produit, pas celui d'il y a trois semaines.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-rose">👤</div>
+        <div class="card-title">Tests utilisateurs augmentés</div>
+        <p class="card-text">Les entretiens et tests sont préparés, facilités et analysés avec l'IA. Les verbatims sont découpés en insights atomiques. Les patterns émergent plus vite. La restitution est directement injectable dans le backlog.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. AGENTS
+============================================================ -->
+<section class="section section-alt" id="agents">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Focus agents spécialisés</span>
+      <h2 class="section-title">Agents, skills et plugins</h2>
+      <p class="section-sub">Un agent spécialisé, c'est un modèle de langage configuré avec un rôle précis, des instructions métier, des outils dédiés et un accès à la base de connaissance projet.</p>
+    </div>
+
+    <div class="callout c-rule">
+      <span class="c-icon">🎯</span>
+      <div>
+        <div class="c-title">Qu'est-ce qu'un skill / une compétence ?</div>
+        <div class="c-text">Un skill est un bloc d'instructions, d'outils et de contexte préconfigurés qui dote un agent d'une expertise spécifique. Comme un brief détaillé donné à un expert avant une mission — sauf que le brief est structuré, cohérent et réutilisable à l'infini. Les plugins regroupent des familles de skills et de connecteurs pour un domaine donné (ex. : Plugin Design, Plugin Finance, Plugin Legal).</div>
+      </div>
+    </div>
+
+    <h3 class="mt-xl">L'équipe d'agents spécialisés</h3>
+    <p class="mt-sm" style="font-size:.92rem;">Chaque rôle humain du delivery peut être augmenté ou suppléé par un agent dédié, disponible instantanément, sans réunion de coordination.</p>
+
+    <div class="agents-grid">
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#dbeafe;">🎯</div>
+        <div><div class="agent-name">Agent PM</div><div class="agent-role">Vision &amp; stratégie produit</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#e0e7ff;">📋</div>
+        <div><div class="agent-name">Agent PO</div><div class="agent-role">Backlog &amp; user stories</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#ede9fe;">🔍</div>
+        <div><div class="agent-name">Agent UX Research</div><div class="agent-role">Insights &amp; verbatims</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#fce7f3;">🎨</div>
+        <div><div class="agent-name">Agent Product Designer</div><div class="agent-role">Parcours &amp; maquettes</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#ccfbf1;">💻</div>
+        <div><div class="agent-name">Agent Front-end</div><div class="agent-role">Composants &amp; prototype</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#fef3c7;">📄</div>
+        <div><div class="agent-name">Agent PRD</div><div class="agent-role">Blueprint produit</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#d1fae5;">📚</div>
+        <div><div class="agent-name">Agent Documentation</div><div class="agent-role">Specs &amp; changelog</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#fee2e2;">🔬</div>
+        <div><div class="agent-name">Agent QA</div><div class="agent-role">Tests &amp; critères d'acceptance</div></div>
+      </div>
+      <div class="agent-chip">
+        <div class="agent-av" style="background:#f3f4f6;">📊</div>
+        <div><div class="agent-name">Agent Backlog</div><div class="agent-role">Priorisation &amp; dépendances</div></div>
+      </div>
+    </div>
+
+    <!-- FICHE AGENT PRD -->
+    <h3 class="mt-xl">Fiche type — Agent PRD / Blueprint produit</h3>
+
+    <div class="fiche">
+      <div class="fiche-head">
+        <div>
+          <h3 style="margin-bottom:.4rem;">Agent PRD</h3>
+          <p style="font-size:.88rem;margin:0;">Génère, structure et maintient le Product Requirements Document tout au long du sprint.</p>
+        </div>
+        <span class="fiche-badge">Skill : PRD Writer</span>
+      </div>
+
+      <div class="fiche-props">
+        <div class="fp"><div class="fp-lbl">Rôle</div><div class="fp-val">Senior Product Manager</div></div>
+        <div class="fp"><div class="fp-lbl">Accès</div><div class="fp-val">Base connaissance + Linear + Figma</div></div>
+        <div class="fp"><div class="fp-lbl">Inputs</div><div class="fp-val">Brief, notes workshop, insights UX</div></div>
+        <div class="fp"><div class="fp-lbl">Outputs</div><div class="fp-val">PRD structuré, user stories, critères d'acceptance</div></div>
+        <div class="fp"><div class="fp-lbl">Connecteurs</div><div class="fp-val">Linear MCP, Figma MCP, GitHub MCP</div></div>
+        <div class="fp"><div class="fp-lbl">Disponibilité</div><div class="fp-val">Instantanée, 24/7, sans réunion</div></div>
+      </div>
+
+      <div class="pb">
+        <div class="pb-head">
+          <span class="pb-lbl">Prompt système — Agent PRD</span>
+          <button class="pb-copy" onclick="cpPrompt(this)">Copier</button>
+        </div>
+        <pre><code>Tu es un Senior Product Manager expert en rédaction de PRD pour produits digitaux.
+
+Tu disposes :
+- de la base de connaissance du projet (contexte métier, personas, insights UX)
+- des notes du dernier workshop augmenté
+- de l'accès aux tickets Linear existants
+- des maquettes Figma disponibles
+
+Tes responsabilités :
+1. Structurer le Product Requirements Document selon le template défini
+2. Rédiger les user stories : "En tant que [persona], je veux [action], afin de [bénéfice]"
+3. Définir des critères d'acceptance testables et précis
+4. Identifier les dépendances techniques et les risques produit
+5. Maintenir la cohérence entre vision produit et specs détaillées
+6. Créer automatiquement les tickets correspondants dans Linear
+
+Format attendu : structure JSON + Markdown lisible
+Niveau de détail : production-ready, aucun placeholder
+Ton : professionnel, précis, orienté décision</code></pre>
+      </div>
+    </div>
+
+    <!-- BIBLIOTHÈQUE DE COMPÉTENCES -->
+    <h3 class="mt-xl">Bibliothèques de compétences disponibles</h3>
+    <p class="mt-sm" style="font-size:.9rem;">Des skills préconfigurés couvrent les grands domaines métier. Il suffit de les activer pour doter un agent d'une expertise spécialisée immédiatement opérationnelle.</p>
+
+    <div class="skills-lib">
+      <div class="skill-tile"><span class="st-icon">🏷️</span><div class="st-name">Brand &amp; Design</div></div>
+      <div class="skill-tile"><span class="st-icon">💰</span><div class="st-name">Finance</div></div>
+      <div class="skill-tile"><span class="st-icon">⚖️</span><div class="st-name">Légal &amp; Conformité</div></div>
+      <div class="skill-tile"><span class="st-icon">🚀</span><div class="st-name">Product Management</div></div>
+      <div class="skill-tile"><span class="st-icon">🎨</span><div class="st-name">Créativité</div></div>
+      <div class="skill-tile"><span class="st-icon">📈</span><div class="st-name">Sales &amp; Growth</div></div>
+      <div class="skill-tile"><span class="st-icon">📣</span><div class="st-name">Marketing</div></div>
+      <div class="skill-tile"><span class="st-icon">⚙️</span><div class="st-name">Productivité</div></div>
+      <div class="skill-tile"><span class="st-icon">🔒</span><div class="st-name">Sécurité &amp; IT</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. STACK & BOUCLE CONNECTÉE
+============================================================ -->
+<section class="section" id="stack">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Stack technique &amp; connecteurs</span>
+      <h2 class="section-title">La boucle delivery connectée</h2>
+      <p class="section-sub">Chaque outil joue un rôle précis dans la chaîne. Ensemble, ils forment une boucle fermée où chaque étape alimente automatiquement la suivante.</p>
+    </div>
+
+    <div class="stack-grid">
+      <div class="stack-item">
+        <span class="si-icon">🤖</span>
+        <span class="si-name">Claude / Codex</span>
+        <span class="si-desc">Orchestration des agents, génération de code, analyse sémantique</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">⌨️</span>
+        <span class="si-name">Claude Code / Cursor</span>
+        <span class="si-desc">Développement assisté IA en temps réel dans l'IDE</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">📐</span>
+        <span class="si-name">FigJam / Figma</span>
+        <span class="si-desc">Workshops, wireframes, design system, prototypes HF</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">📌</span>
+        <span class="si-name">Linear</span>
+        <span class="si-desc">Backlog, tickets, sprints, roadmap produit</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">🐙</span>
+        <span class="si-name">GitHub</span>
+        <span class="si-desc">Versioning, code review, CI/CD, déclencheurs automatiques</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">▲</span>
+        <span class="si-name">Vercel</span>
+        <span class="si-desc">Déploiement instantané, preview par branche, URL partageable</span>
+      </div>
+      <div class="stack-item">
+        <span class="si-icon">🔗</span>
+        <span class="si-name">MCP Protocol</span>
+        <span class="si-desc">Connexion universelle entre agents IA et outils du delivery</span>
+      </div>
+    </div>
+
+    <!-- MCP CRÉATIF -->
+    <div class="callout c-insight" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">🎛️</span>
+      <div>
+        <div class="c-title">Extension créative via MCP — au-delà du delivery classique</div>
+        <div class="c-text">Le protocole MCP permet de connecter Claude Cowork à des plateformes tierces : <strong>ElevenLabs</strong> pour la génération vocale et audio, outils de <strong>motion design</strong>, génération vidéo, agents spécialisés externes. Résultat : enrichissement des prototypes avec du contenu multimédia, création rapide de démos réalistes, automatisation de productions auparavant complexes et coûteuses.</div>
+      </div>
+    </div>
+
+    <!-- PILOTAGE PAR AGENTS -->
+    <h3 class="mt-xl">Pilotage du projet par agents IA</h3>
+    <p class="mt-sm" style="font-size:.92rem;">Les outils de ticketing (Linear, Jira) deviennent des interfaces de pilotage IA-native. Les agents prennent en charge les tickets, les analysent, produisent des livrables et documentent — sans réunion de coordination.</p>
+
+    <div class="cards-grid" style="margin-top:var(--sp-md);">
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-blue">📌</div>
+        <div class="card-title">Création automatique depuis les artefacts</div>
+        <p class="card-text">Les artefacts projet (PRD, specs, notes de workshop) génèrent automatiquement les tickets structurés dans Linear ou Jira, avec le bon contexte, les bons critères d'acceptance et les bonnes dépendances.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-indigo">🤖</div>
+        <div class="card-title">Agents assignés aux tickets</div>
+        <p class="card-text">Chaque ticket peut être assigné à un agent spécialisé. L'agent analyse le besoin, produit le livrable (code, doc, analyse), challenge les hypothèses et met à jour le ticket avec ses résultats et sa progression.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-green"></div>
+        <div class="card-icon ic-green">🔄</div>
+        <div class="card-title">Synchronisation continue</div>
+        <p class="card-text">Documentation, prototype et backlog restent synchronisés en temps réel. Chaque livrable agent déclenche une mise à jour automatique des specs et du changelog — sans effort humain supplémentaire.</p>
+      </div>
+    </div>
+
+    <div class="callout c-rule" style="margin-top:var(--sp-md);">
+      <span class="c-icon">🔬</span>
+      <div>
+        <div class="c-title">Cas d'usage observé — Coach prévention habitation</div>
+        <div class="c-text">Sur le projet du nouveau coach prévention habitation, les premières expérimentations ont montré qu'il est possible de piloter l'ensemble du delivery via Linear : décomposition automatique du travail, exécution semi-autonome des tâches par les agents, synchronisation continue entre documentation, prototype et backlog.</div>
+      </div>
+    </div>
+
+    <!-- BOUCLE CONNECTÉE -->
+    <h3 class="mt-xl">La boucle delivery en action</h3>
+
+    <div class="loop-wrap">
+      <div class="loop">
+        <div class="loop-step">
+          <div class="loop-node" style="background:#e0e7ff;border-color:#6366f1;">🗂️</div>
+          <div class="loop-lbl">Workshop<br>FigJam</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#dbeafe;border-color:#2563eb;">🧠</div>
+          <div class="loop-lbl">Analyse IA<br>Synthèse</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#fef3c7;border-color:#d97706;">📄</div>
+          <div class="loop-lbl">PRD<br>Agent</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#f3f4f6;border-color:#6b7280;">📌</div>
+          <div class="loop-lbl">Tickets<br>Linear</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#ccfbf1;border-color:#059669;">⚡</div>
+          <div class="loop-lbl">Prototype<br>Code</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#fee2e2;border-color:#dc2626;">🐙</div>
+          <div class="loop-lbl">GitHub<br>CI/CD</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#f0fdf4;border-color:#16a34a;">▲</div>
+          <div class="loop-lbl">Vercel<br>Preview</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#ede9fe;border-color:#8b5cf6;">👤</div>
+          <div class="loop-lbl">Tests<br>Utilisateurs</div>
+        </div>
+        <div class="loop-arr">→</div>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#e0e7ff;border-color:#6366f1;">🔄</div>
+          <div class="loop-lbl">Mise à jour<br>Specs</div>
+        </div>
+      </div>
+
+      <div class="callout c-rule" style="margin:0;margin-top:var(--sp-md);">
+        <span class="c-icon">🔗</span>
+        <div>
+          <div class="c-title">Le principe de la boucle fermée</div>
+          <div class="c-text">Chaque étape génère des données qui alimentent la suivante. L'IA est présente à chaque transition pour transformer, synthétiser et proposer — jamais pour décider à la place de l'équipe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5b. REAL DATA PROTOTYPE
+============================================================ -->
+<section class="section section-alt" id="realdataproto">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Axe complémentaire clé</span>
+      <h2 class="section-title">Real Data Prototype</h2>
+      <p class="section-sub">On sort du "fake it until you make it" pour entrer dans une logique où le prototype est réellement interactif, alimenté par un modèle de langage — et testable de façon crédible dès les premiers jours.</p>
+    </div>
+
+    <!-- AVANT / APRÈS -->
+    <div class="paradigm-grid">
+      <div class="paradigm-card before">
+        <span class="p-badge">Prototype classique</span>
+        <div class="p-title">"Fake it until you make it"</div>
+        <ul class="p-list">
+          <li>Données fictives figées dans les maquettes</li>
+          <li>Interactions simulées manuellement</li>
+          <li>Tests utilisateurs biaisés par l'effet "prototype évident"</li>
+          <li>Écart fort entre ce que l'on teste et ce que l'on va livrer</li>
+          <li>Décisions produit basées sur des réactions à du faux</li>
+        </ul>
+      </div>
+      <div class="p-arrow">
+        <div class="p-arrow-icon">→</div>
+        <div class="p-arrow-lbl">Real Data<br>Prototype</div>
+      </div>
+      <div class="paradigm-card after">
+        <span class="p-badge">Real Data Prototype</span>
+        <div class="p-title">LLM injecté dans le prototype</div>
+        <ul class="p-list">
+          <li>Modèle de langage branché directement dans le prototype</li>
+          <li>Comportements simulés de façon crédible et dynamique</li>
+          <li>Expérience utilisateur testable très tôt, quasi-réelle</li>
+          <li>Réduction forte des ambiguïtés d'interprétation</li>
+          <li>Décisions produit appuyées sur des interactions authentiques</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp-md);margin-top:var(--sp-xl);">
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-blue">🔌</div>
+        <div class="card-title">Prototype interactif dès J+2</div>
+        <p class="card-text">Le LLM est injecté dans le prototype fonctionnel déployé sur Vercel. Les réponses et comportements sont générés dynamiquement — pas préprogrammés. L'utilisateur vit une expérience quasi-réelle.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-indigo">🧪</div>
+        <div class="card-title">Validation beaucoup plus réaliste</div>
+        <p class="card-text">Les tests utilisateurs sur un Real Data Prototype révèlent des insights que les prototypes statiques masquent. Les utilisateurs réagissent à de vraies interactions, pas à des animations.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-violet"></div>
+        <div class="card-icon ic-violet">🗑️</div>
+        <div class="card-title">Prototype jetable, décision durable</div>
+        <p class="card-text">Le prototype n'est pas dans l'architecture cible — il reste jetable. Mais les apprentissages qu'il génère sont réels, capitalisés et directement injectés dans le backlog et la documentation vivante.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-green"></div>
+        <div class="card-icon ic-green">⚡</div>
+        <div class="card-title">Accélération des décisions produit</div>
+        <p class="card-text">Les ambiguïtés fonctionnelles se lèvent naturellement pendant les tests. On sort du débat théorique sur "comment l'IA devrait se comporter" pour observer comment elle se comporte réellement.</p>
+      </div>
+    </div>
+
+    <div class="hbox">
+      <p>💡 <strong>Ce que cela change pour le Board :</strong> Quand vous présentez un Real Data Prototype, vous ne montrez plus une simulation de ce que le produit fera. Vous montrez ce que le produit fait déjà — dans un contexte contrôlé, avec de vraies interactions. Le gap entre la démo et la réalité s'effondre.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. RECETTE EN 7 ÉTAPES
+============================================================ -->
+<section class="section section-warm" id="recette">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">La recette packagée</span>
+      <h2 class="section-title">7 étapes, 7 livrables</h2>
+      <p class="section-sub">Chaque étape a un objectif précis, un agent dédié et produit un livrable tangible. Aucune étape ne se termine sans un artefact concret.</p>
+    </div>
+
+    <div class="stepper">
+
+      <!-- ÉTAPE 1 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">1</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Cadrage</div>
+          <div class="step-title">Cadrer le défi et constituer la base de connaissance</div>
+          <p class="step-desc">Rassembler, structurer et rendre exploitable tout ce qui est déjà su. Études, entretiens passés, données marché, contraintes réglementaires, insights utilisateurs — ce capital dispersé devient la fondation du sprint.</p>
+          <div class="pb">
+            <div class="pb-head">
+              <span class="pb-lbl">Prompt de cadrage</span>
+              <button class="pb-copy" onclick="cpPrompt(this)">Copier</button>
+            </div>
+            <pre><code>Tu es un expert en product discovery. En t'appuyant sur les documents fournis,
+génère une synthèse structurée du défi avec :
+- Le problème central en une phrase
+- Les 3 hypothèses clés à valider
+- Les données connues vs les zones d'incertitude
+- Les personas principaux et leurs besoins critiques
+- Les contraintes non négociables (technique, légal, budget)
+
+Format : document de cadrage prêt à partager en workshop</code></pre>
+          </div>
+          <!-- PLAYBOOK PROJET -->
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-lg);margin:var(--sp-md) 0;">
+            <h4 style="margin-bottom:var(--sp-sm);font-size:.95rem;">📋 Structure du Playbook Projet (Markdown)</h4>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--sp-sm);">
+              <div>
+                <div style="font-size:.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;">Vision &amp; Cadrage</div>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.3rem;">
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Problem Statement</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Long Term Goal</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Sprint Questions</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Hypothèses clés</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ KPI de succès</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:.7rem;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;">Valeur</div>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.3rem;">
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ What's in it for the user</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ What's in it for the company</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;">Pain Points</div>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:.3rem;">
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Top 3 problèmes utilisateurs</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Irritants majeurs</li>
+                  <li style="font-size:.83rem;color:var(--text-secondary);">▸ Opportunités produit</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-tags">
+            <span class="stag">📄 Playbook Projet (Markdown)</span>
+            <span class="stag">🗂️ Base de connaissance initialisée</span>
+            <span class="stag">🎯 Hypothèses à valider</span>
+            <span class="stag">📊 KPI de succès définis</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">2</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Alignement</div>
+          <div class="step-title">Aligner le problème en workshop augmenté</div>
+          <p class="step-desc">Un workshop où l'IA prend des notes structurées, propose des reformulations du problème, génère des axes de design et identifie les désaccords tacites dans le groupe. L'objectif : un alignement clair et documenté à la fin de la session.</p>
+          <div class="callout c-rule" style="margin:var(--sp-md) 0;">
+            <span class="c-icon">💡</span>
+            <div>
+              <div class="c-title">Rôle de l'IA dans le workshop</div>
+              <div class="c-text">L'IA est invisible pour les participants — elle facilite en arrière-plan. Elle structure les post-its FigJam, propose des regroupements thématiques, identifie les tensions et génère des "How Might We" pertinents à la volée.</div>
+            </div>
+          </div>
+          <div class="step-tags">
+            <span class="stag">🗂️ Synthèse workshop structurée</span>
+            <span class="stag">🎯 Problem statement partagé</span>
+            <span class="stag">💡 HMW prioritaires</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">3</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Compréhension</div>
+          <div class="step-title">Comprendre les besoins réels et moments de vie</div>
+          <p class="step-desc">L'agent UX Research analyse la base de connaissance, identifie les gaps et génère un guide d'entretien ciblé. Les tests sont préparés avec précision : moments de vie, déclencheurs comportementaux, barrières émotionnelles, attentes implicites.</p>
+          <div class="step-tags">
+            <span class="stag">👤 Personas enrichis</span>
+            <span class="stag">📋 Guide d'entretien IA-first</span>
+            <span class="stag">🗺️ Carte des moments de vie</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 4 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">4</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Conception</div>
+          <div class="step-title">Concevoir les parcours client + agent</div>
+          <p class="step-desc">L'agent Product Designer co-conçoit les parcours utilisateurs et les parcours agent — comment l'IA intervient dans l'expérience. Les flows sont générés dans FigJam ou Figma, itérés en direct, annotés avec les décisions de design.</p>
+          <div class="callout c-insight" style="margin:var(--sp-md) 0;">
+            <span class="c-icon">✨</span>
+            <div>
+              <div class="c-title">Parcours agent : une nouveauté critique</div>
+              <div class="c-text">Dans un produit AI-first, l'IA fait partie de l'expérience. Le parcours agent documente où l'IA intervient, ce qu'elle fait, ce qu'elle ne fait pas, et comment l'humain garde le contrôle à chaque étape critique. C'est un livrable de design à part entière.</div>
+            </div>
+          </div>
+          <div class="step-tags">
+            <span class="stag">🗺️ User flows</span>
+            <span class="stag">🤖 Agent flows</span>
+            <span class="stag">🎨 Maquettes fil de fer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 5 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">5</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Socle Produit</div>
+          <div class="step-title">Générer le socle produit</div>
+          <p class="step-desc">L'agent PRD génère un Product Requirements Document structuré, avec user stories, critères d'acceptance, dépendances et risques identifiés. L'agent Backlog crée les tickets dans Linear, priorisés et connectés au PRD.</p>
+          <div class="step-tags">
+            <span class="stag">📄 PRD structuré</span>
+            <span class="stag">📋 User stories complètes</span>
+            <span class="stag">📌 Backlog Linear initialisé</span>
+            <span class="stag">⚠️ Risques identifiés</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 6 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">6</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Prototype</div>
+          <div class="step-title">Prototyper et publier rapidement</div>
+          <p class="step-desc">L'agent Front-end génère un prototype fonctionnel à partir des specs et des maquettes. Le code est poussé sur GitHub, déployé automatiquement sur Vercel. L'URL de preview est partagée en quelques minutes — pas quelques jours.</p>
+          <div class="callout c-rule" style="margin:var(--sp-md) 0;">
+            <span class="c-icon">🚀</span>
+            <div>
+              <div class="c-title">Prototype-first, pas prototype-last</div>
+              <div class="c-text">Le prototype n'est plus une phase de validation finale. C'est l'outil central de la conversation avec les utilisateurs, les parties prenantes et l'équipe technique dès la deuxième journée du sprint.</div>
+            </div>
+          </div>
+          <div class="step-tags">
+            <span class="stag">⚡ Prototype déployé Vercel</span>
+            <span class="stag">🐙 Repository GitHub</span>
+            <span class="stag">🔗 URL preview partageable</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 7 -->
+      <div class="step">
+        <div class="step-num-wrap"><div class="step-num-box"><span class="step-n">7</span></div></div>
+        <div class="step-body">
+          <div class="step-phase">Phase Apprentissage</div>
+          <div class="step-title">Tester, apprendre et rétro-documenter</div>
+          <p class="step-desc">Les tests utilisateurs sont conduits sur le prototype déployé. L'IA analyse les sessions, extrait les insights atomiques, identifie les patterns comportementaux et génère une restitution structurée. Les apprentissages alimentent immédiatement le backlog et la documentation vivante.</p>
+          <div class="step-tags">
+            <span class="stag">📊 Restitution tests augmentée</span>
+            <span class="stag">💡 Insights atomiques</span>
+            <span class="stag">📌 Backlog mis à jour</span>
+            <span class="stag">📖 Documentation vivante enrichie</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. TESTS UTILISATEURS AUGMENTÉS
+============================================================ -->
+<section class="section section-alt" id="tests">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Module tests utilisateurs</span>
+      <h2 class="section-title">Tests utilisateurs augmentés par IA</h2>
+      <p class="section-sub">L'IA transforme chaque phase du processus de test — de la préparation à la capitalisation des insights. Le test reste humain ; l'IA amplifie sa portée et sa précision.</p>
+    </div>
+
+    <div class="ux-phases">
+      <div class="ux-phase">
+        <div class="up-n">1</div>
+        <div class="up-t">Cadrage augmenté</div>
+        <p class="up-d">L'IA génère les objectifs de recherche depuis la base de connaissance : besoins non adressés, hypothèses à valider, points de friction pressentis.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">2</div>
+        <div class="up-t">Guide d'entretien IA-first</div>
+        <p class="up-d">Le guide intègre les dimensions Besoins / Habitudes / Émotions et les heuristiques UX d'Amélie Boucher. Questions ouvertes, scénarios et tâches générés et itérés rapidement.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">3</div>
+        <div class="up-t">Conduite IA-enabled, humain visible</div>
+        <p class="up-d">L'IA prend des notes structurées en temps réel. Le facilitateur reste 100% présent avec l'utilisateur. L'IA est invisible pour le participant — jamais intrusive.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">4</div>
+        <div class="up-t">Restitution augmentée</div>
+        <p class="up-d">Synthèse automatique : verbatims clés, patterns comportementaux, moments de friction, moments de satisfaction — structurés par objectif de recherche.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">5</div>
+        <div class="up-t">Atomic Research</div>
+        <p class="up-d">Chaque verbatim est découpé en insight atomique : un fait, une source, une confiance, un lien avec un besoin produit. Capitalisable, recherchable, traçable dans le temps.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">6</div>
+        <div class="up-t">Analyse B / H / E</div>
+        <p class="up-d">Les insights sont catégorisés selon trois dimensions : Besoins fonctionnels, Habitudes comportementales, États Émotionnels. Une lecture à 360° de l'expérience utilisateur.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">7</div>
+        <div class="up-t">Heuristique UX Boucher</div>
+        <p class="up-d">Les problèmes UX sont qualifiés : utilité, utilisabilité, accessibilité, désirabilité — avec un score de criticité automatique et des recommandations priorisées.</p>
+      </div>
+      <div class="ux-phase">
+        <div class="up-n">8</div>
+        <div class="up-t">Injection dans la discovery</div>
+        <p class="up-d">Les insights alimentent directement le backlog (tickets Linear), la documentation vivante et la base de connaissance pour les prochains sprints. Zéro perte d'information.</p>
+      </div>
+    </div>
+
+    <!-- PERSONAS SYNTHÉTIQUES -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:var(--sp-xl);box-shadow:var(--shadow-sm);margin-top:var(--sp-xl);">
+      <span class="label">Axe complémentaire</span>
+      <h3 style="margin-bottom:var(--sp-sm);">Personas synthétiques &amp; tests utilisateurs simulés</h3>
+      <p style="font-size:.92rem;margin-bottom:var(--sp-lg);">L'IA permet de créer des correspondants synthétiques représentant des utilisateurs cibles — et de simuler leurs réactions sur un parcours avant même de recruter de vrais testeurs.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:var(--sp-sm);margin-bottom:var(--sp-lg);">
+        <div style="background:var(--bg);border-radius:var(--r-lg);padding:var(--sp-md);">
+          <div style="font-size:1.5rem;margin-bottom:.5rem;">👤</div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.3rem;">Génération de personas crédibles</div>
+          <p style="font-size:.83rem;color:var(--text-secondary);">L'IA construit des personas détaillés à partir de la base de connaissance : profil, habitudes, frustrations, déclencheurs décisionnels.</p>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--r-lg);padding:var(--sp-md);">
+          <div style="font-size:1.5rem;margin-bottom:.5rem;">🎭</div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.3rem;">Simulation de réactions utilisateurs</div>
+          <p style="font-size:.83rem;color:var(--text-secondary);">Chaque persona peut "naviguer" un parcours et produire des réactions, objections et commentaires — comme lors d'un vrai test.</p>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--r-lg);padding:var(--sp-md);">
+          <div style="font-size:1.5rem;margin-bottom:.5rem;">⚡</div>
+          <div style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.3rem;">Premiers signaux en quelques minutes</div>
+          <p style="font-size:.83rem;color:var(--text-secondary);">Identifier les défauts évidents, challenger les hypothèses et affiner les parcours avant de mobiliser de vrais utilisateurs.</p>
+        </div>
+      </div>
+
+      <div class="callout c-warn" style="margin:0;">
+        <span class="c-icon">⚠️</span>
+        <div>
+          <div class="c-title">Cette approche ne remplace pas les tests réels</div>
+          <div class="c-text">Les personas synthétiques sont un accélérateur de pré-validation, pas un substitut. Ils révèlent souvent des problèmes UX non anticipés et réduisent le nombre d'itérations nécessaires avec de vrais utilisateurs — mais la validation finale reste humaine, toujours.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout c-warn" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">⚠️</span>
+      <div>
+        <div class="c-title">Points de vigilance — Tests augmentés</div>
+        <div class="c-text">Ne jamais remplacer la présence humaine par l'IA pendant les tests. L'empathie, les silences, le non-verbal — l'IA ne peut pas les capter. L'IA analyse ; l'humain comprend. Toujours valider les insights IA avec au moins un regard humain avant d'agir sur les priorités produit.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8. LIVRABLES
+============================================================ -->
+<section class="section" id="livrables">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Livrables standards</span>
+      <h2 class="section-title">Ce que le sprint produit concrètement</h2>
+      <p class="section-sub">À l'issue d'un AI-First Delivery Sprint, chaque domaine dispose de livrables actionnables, documentés et maintenus par les agents.</p>
+    </div>
+
+    <div class="deliv-grid">
+      <div class="deliv-group">
+        <div class="dg-head"><span class="dg-icon">🎯</span><div class="dg-title">Cadrage</div></div>
+        <ul class="dg-list">
+          <li>Brief de cadrage structuré</li>
+          <li>Base de connaissance initialisée</li>
+          <li>Hypothèses à valider</li>
+          <li>Contraintes documentées</li>
+          <li>Personas enrichis</li>
+        </ul>
+      </div>
+      <div class="deliv-group">
+        <div class="dg-head"><span class="dg-icon">👤</span><div class="dg-title">Client &amp; Expérience</div></div>
+        <ul class="dg-list">
+          <li>User flows et parcours client</li>
+          <li>Carte des moments de vie</li>
+          <li>Insights atomiques capitalisés</li>
+          <li>Restitution tests augmentée</li>
+          <li>Matrice besoins / habitudes / émotions</li>
+        </ul>
+      </div>
+      <div class="deliv-group">
+        <div class="dg-head"><span class="dg-icon">📦</span><div class="dg-title">Produit</div></div>
+        <ul class="dg-list">
+          <li>PRD structuré et à jour</li>
+          <li>User stories avec critères d'acceptance</li>
+          <li>Backlog Linear priorisé</li>
+          <li>Maquettes Figma annotées</li>
+          <li>Agent flows documentés</li>
+        </ul>
+      </div>
+      <div class="deliv-group">
+        <div class="dg-head"><span class="dg-icon">⚙️</span><div class="dg-title">Technique &amp; Exécution</div></div>
+        <ul class="dg-list">
+          <li>Prototype fonctionnel déployé (Vercel)</li>
+          <li>Repository GitHub initialisé</li>
+          <li>Specs techniques</li>
+          <li>Critères de qualité et tests</li>
+          <li>Architecture décisionnelle documentée</li>
+        </ul>
+      </div>
+      <div class="deliv-group">
+        <div class="dg-head"><span class="dg-icon">📚</span><div class="dg-title">Apprentissage</div></div>
+        <ul class="dg-list">
+          <li>Documentation vivante maintenue</li>
+          <li>Changelog automatique</li>
+          <li>Rétro sprint structurée</li>
+          <li>Base de connaissance enrichie</li>
+          <li>Métriques du sprint</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8b. RÉTRO-DOCUMENTATION
+============================================================ -->
+<section class="section section-alt" id="retrodoc">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Capacité complémentaire</span>
+      <h2 class="section-title">Rétro-documentation &amp; compréhension produit</h2>
+      <p class="section-sub">L'IA peut générer automatiquement une documentation complète à partir d'un prototype existant, d'écrans ou de parcours — même sans accès au code source. Une capacité particulièrement puissante pour les produits legacy.</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="margin-bottom:var(--sp-md);">Génération de specs depuis les écrans</h3>
+        <p style="font-size:.92rem;margin-bottom:var(--sp-md);">À partir de screenshots, de prototypes ou de parcours utilisateurs capturés, l'IA peut :</p>
+        <div style="display:flex;flex-direction:column;gap:.55rem;">
+          <div style="display:flex;gap:.75rem;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:var(--primary-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">🔍</div>
+            <div><div style="font-size:.88rem;font-weight:600;color:var(--text);">Identifier les composants UI</div><div style="font-size:.83rem;color:var(--text-secondary);">Reconnaître les patterns, les états, les interactions</div></div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:var(--primary-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">🗺️</div>
+            <div><div style="font-size:.88rem;font-weight:600;color:var(--text);">Reconstituer les flows de navigation</div><div style="font-size:.83rem;color:var(--text-secondary);">Reconstruire les chaînes d'écrans et les parcours</div></div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:var(--primary-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">📄</div>
+            <div><div style="font-size:.88rem;font-weight:600;color:var(--text);">Documenter les comportements attendus</div><div style="font-size:.83rem;color:var(--text-secondary);">Produire des specs exploitables par les équipes tech</div></div>
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:flex-start;">
+            <div style="width:32px;height:32px;background:var(--primary-light);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">💡</div>
+            <div><div style="font-size:.88rem;font-weight:600;color:var(--text);">Expliciter les intentions UX</div><div style="font-size:.83rem;color:var(--text-secondary);">Comprendre pourquoi les écrans ont été conçus ainsi</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom:var(--sp-md);">Cas d'usage : produits legacy</h3>
+        <div class="callout c-insight" style="margin:0 0 var(--sp-md) 0;">
+          <span class="c-icon">✨</span>
+          <div>
+            <div class="c-title">Ce qui était chronophage devient instantané</div>
+            <div class="c-text">Documenter un produit existant dont la documentation a disparu ou est obsolète prenait des semaines. L'analyse visuelle par IA réduit ce délai à quelques heures — avec une qualité de specs directement exploitable par les agents de développement.</div>
+          </div>
+        </div>
+        <div class="callout c-rule">
+          <span class="c-icon">🚀</span>
+          <div>
+            <div class="c-title">Accélérateur de découverte produit</div>
+            <div class="c-text">Sur un nouveau projet, la rétro-documentation d'un prototype existant ou d'un concurrent permet de démarrer la base de connaissance en quelques heures au lieu de quelques jours. Une capacité particulièrement puissante pour les reprises de projet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVRABLES COMPLÉMENTAIRES -->
+    <h3 style="margin-top:var(--sp-xl);margin-bottom:var(--sp-sm);">Livrables complémentaires enrichis</h3>
+    <p style="font-size:.9rem;margin-bottom:var(--sp-md);">La rétro-documentation augmente le catalogue standard des livrables — notamment sur les dimensions design et UX.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--sp-sm);">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-md);box-shadow:var(--shadow-sm);">
+        <div style="font-size:.7rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--sp-sm);">User Research</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.35rem;">
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Guides d'entretien enrichis</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Scripts de tests utilisateurs</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Synthèses d'insights structurées</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Analyses comportementales</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-md);box-shadow:var(--shadow-sm);">
+        <div style="font-size:.7rem;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--sp-sm);">Produit</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.35rem;">
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ User journeys documentés</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Cartes d'expérience</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Vision produit complète</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Tickets générés automatiquement</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-md);box-shadow:var(--shadow-sm);">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--sp-sm);">Design</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.35rem;">
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Documentation UX complète</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Spécifications UI annotées</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Annotations d'écrans</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Motion concepts</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-md);box-shadow:var(--shadow-sm);">
+        <div style="font-size:.7rem;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.08em;margin-bottom:var(--sp-sm);">Exécution</div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.35rem;">
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ PRD &amp; blueprint technique</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Tickets Linear / Jira</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Documentation continue</li>
+          <li style="font-size:.83rem;color:var(--text-secondary);">▸ Handoff IA → équipes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8c. DOCUMENTATION IA-FIRST
+============================================================ -->
+<section class="section" id="docfirst">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Format de référence</span>
+      <h2 class="section-title">Documentation IA-first : le Markdown comme standard</h2>
+      <p class="section-sub">La documentation n'est pas un livrable de fin de projet. C'est le matériau de base que les agents consomment, enrichissent et maintiennent. Le choix du format n'est pas anodin.</p>
+    </div>
+
+    <div class="paradigm-grid">
+      <div class="paradigm-card before">
+        <span class="p-badge">PowerPoint / Word</span>
+        <div class="p-title">Le format qui freine l'IA</div>
+        <ul class="p-list">
+          <li>Difficile à maintenir : une diapo modifiée casse la mise en page</li>
+          <li>Peu exploitable par les agents IA : format binaire, non structuré</li>
+          <li>Non versionnable : impossible de faire un diff propre</li>
+          <li>Pas automatisable : toute mise à jour est manuelle</li>
+          <li>Silo de format : incompatible avec les outils du delivery moderne</li>
+        </ul>
+      </div>
+      <div class="p-arrow">
+        <div class="p-arrow-icon">→</div>
+        <div class="p-arrow-lbl">Migration<br>progressive</div>
+      </div>
+      <div class="paradigm-card after">
+        <span class="p-badge">Markdown</span>
+        <div class="p-title">Le format IA-native</div>
+        <ul class="p-list">
+          <li>Simple à écrire et à maintenir — aucune mise en forme à gérer</li>
+          <li>Exploitable nativement par tous les agents IA</li>
+          <li>Versionnable avec Git : historique complet, diff lisible</li>
+          <li>Automatisable : les agents génèrent, mettent à jour et publient</li>
+          <li>Interopérable : Notion, GitHub, Linear, Vercel le lisent tous</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--sp-md);margin-top:var(--sp-xl);">
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-blue">📝</div>
+        <div class="card-title">Playbook Projet en Markdown</div>
+        <p class="card-text">Chaque sprint démarre par un Playbook Projet au format Markdown. Ce fichier devient la source de vérité partagée entre tous les agents et toutes les parties prenantes humaines.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-indigo">🔄</div>
+        <div class="card-title">Mise à jour automatique par les agents</div>
+        <p class="card-text">Les agents PRD, Documentation et Backlog maintiennent les fichiers Markdown en temps réel. Chaque décision, chaque livrable, chaque insight enrichit automatiquement la documentation.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-green"></div>
+        <div class="card-icon ic-green">🐙</div>
+        <div class="card-title">Versioning Git intégré</div>
+        <p class="card-text">Toute la documentation est versionnée dans le même repository que le code. L'historique des décisions produit est traçable, comparable et récupérable à tout moment.</p>
+      </div>
+    </div>
+
+    <div class="callout c-rule" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">🎯</span>
+      <div>
+        <div class="c-title">La convergence progressive vers Markdown</div>
+        <div class="c-text">L'objectif n'est pas de supprimer PowerPoint d'un coup. C'est d'identifier les artefacts project qui ont le plus de valeur pour les agents (PRD, specs, playbook, user stories, guides d'entretien) et de les migrer progressivement vers des formats Markdown structurés. Chaque artefact migré augmente la capacité des agents à comprendre et exécuter.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8d. VOIX COMME INPUT DE DELIVERY
+============================================================ -->
+<section class="section section-alt" id="voix">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Nouveauté</span>
+      <h2 class="section-title">La voix comme input de delivery</h2>
+      <p class="section-sub">Une réunion, un atelier, une session d'itération : chaque échange oral peut désormais être capturé, structuré et transformé en matière exploitable — specs, tickets, mises à jour PRD, instructions agents.</p>
+    </div>
+
+    <div class="callout c-rule" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">🎙️</span>
+      <div>
+        <div class="c-title">Formule synthétique</div>
+        <div class="c-text">Dans l'AI-First Delivery Sprint, la voix devient un input de delivery : chaque discussion utile peut être capturée, structurée, convertie en specs, transformée en tickets et réinjectée dans la boucle prototype&nbsp;/ test&nbsp;/ apprentissage.</div>
+      </div>
+    </div>
+
+    <!-- ── 1. Outils disponibles ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Ce qui devient possible aujourd'hui</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">Les outils de capture audio et de transcription sont matures. Combinés à un LLM, ils permettent de transformer n'importe quel échange oral en matière structurée.</p>
+
+    <div class="cards-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));">
+      <div class="card">
+        <div class="card-bar bar-blue"></div>
+        <div class="card-icon ic-blue">🤝</div>
+        <div class="card-title">Teams Copilot</div>
+        <p class="card-text">Résume les points clés d'une réunion, identifie qui a dit quoi et suggère des actions — pendant ou après la session. Intégré nativement dans Microsoft 365.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-indigo"></div>
+        <div class="card-icon ic-indigo">📋</div>
+        <div class="card-title">Teams Recap</div>
+        <p class="card-text">Centralise enregistrements, transcriptions et contenus partagés d'une réunion dans un espace unique. Retrouvable et consultable après coup.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-violet"></div>
+        <div class="card-icon ic-violet">💬</div>
+        <div class="card-title">ChatGPT Record</div>
+        <p class="card-text">Transcrit et résume réunions, brainstorms et notes vocales — puis transforme ces résumés en plans projet, emails ou code. Utilisable hors contexte entreprise.</p>
+      </div>
+      <div class="card">
+        <div class="card-bar bar-green"></div>
+        <div class="card-icon ic-green">⚙️</div>
+        <div class="card-title">Whisper + LLM</div>
+        <p class="card-text">Pipeline automatisé souverain : transcription (Whisper), résumé, points clés, actions et analyse via un LLM. Configurable, hébergeable en interne, maîtrisable.</p>
+      </div>
+    </div>
+
+    <!-- ── 2. Le vrai changement ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Le vrai changement</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">La voix devient une source de travail structurée. La réunion ne produit plus seulement un compte rendu — elle peut produire des livrables directement exploitables.</p>
+
+    <div class="paradigm-grid" style="margin-top:var(--sp-xl);">
+      <div class="paradigm-card before">
+        <span class="p-badge">Avant</span>
+        <div class="p-title" style="font-size:1rem;">Pipeline fragmenté</div>
+        <div class="formule-box" style="margin-top:var(--sp-md);">
+          <p>Réunion</p>
+          <p>→ notes partielles</p>
+          <p>→ synthèse tardive</p>
+          <p>→ specs approximatives</p>
+        </div>
+        <ul class="p-list">
+          <li>Perte de contexte à chaque étape</li>
+          <li>Délai entre discussion et action</li>
+          <li>Specs déconnectées des échanges réels</li>
+        </ul>
+      </div>
+      <div class="paradigm-card after">
+        <span class="p-badge">Maintenant</span>
+        <div class="p-title" style="font-size:1rem;">Pipeline continu</div>
+        <div class="formule-box" style="margin-top:var(--sp-md);">
+          <p>Discussion capturée</p>
+          <p>→ transcript</p>
+          <p>→ synthèse IA</p>
+          <p>→ specs / tickets</p>
+          <p>→ agents → prototype</p>
+        </div>
+        <ul class="p-list">
+          <li>Aucune perte entre la parole et l'artefact</li>
+          <li>Décisions tracées dès leur formulation</li>
+          <li>Boucle delivery fermée depuis l'oral</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:var(--sp-lg);font-size:.93rem;font-weight:600;color:var(--text);max-width:var(--text-w);">Une réunion bien capturée peut produire :</p>
+    <div class="output-list" style="margin-top:var(--sp-sm);">
+      <span class="output-tag">Décisions</span>
+      <span class="output-tag">Hypothèses</span>
+      <span class="output-tag">Actions</span>
+      <span class="output-tag">Irritants</span>
+      <span class="output-tag">Arbitrages</span>
+      <span class="output-tag">Impacts parcours</span>
+      <span class="output-tag">MAJ PRD</span>
+      <span class="output-tag">Specs fonctionnelles</span>
+      <span class="output-tag">Tickets Linear / Jira</span>
+      <span class="output-tag">Consignes agents IA</span>
+      <span class="output-tag">Changelog prototype</span>
+    </div>
+
+    <!-- ── 3. Application workshops ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Application aux workshops augmentés</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">Dans un workshop augmenté, l'équipe peut parler à voix haute en considérant que l'IA est un membre silencieux de l'atelier, chargé de capter la matière brute.</p>
+
+    <div class="callout c-insight" style="margin-top:var(--sp-lg);">
+      <span class="c-icon">💡</span>
+      <div>
+        <div class="c-title">Bonne pratique</div>
+        <div class="c-text">Verbaliser explicitement les décisions, hypothèses et actions comme si l'IA devait les transformer ensuite en specs et tickets. Ridicule&nbsp;? Un peu. Efficace&nbsp;? Oui — comme beaucoup de choses dans la vie de bureau.</div>
+      </div>
+    </div>
+
+    <p style="margin-top:var(--sp-lg);font-size:.9rem;font-weight:600;color:var(--text);">Formulations utiles pendant l'atelier :</p>
+    <div class="formule-box" style="margin-top:var(--sp-sm);">
+      <p>Nous décidons que…</p>
+      <p>L'hypothèse à tester est…</p>
+      <p>Le point bloquant est…</p>
+      <p>L'action à créer est…</p>
+      <p>La version suivante du prototype doit…</p>
+      <p>Cette remarque doit être ajoutée au PRD…</p>
+      <p>Ce sujet doit devenir un ticket…</p>
+    </div>
+
+    <!-- ── 4. Boucle itération prototype ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Application aux ateliers d'itération prototype</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">Cas particulièrement puissant : chaque session de revue de prototype devient une source directe pour la version suivante, sans friction manuelle.</p>
+
+    <div class="loop-wrap" style="margin-top:var(--sp-xl);">
+      <p style="font-size:.75rem;font-weight:700;color:var(--text-muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:var(--sp-md);">Boucle d'itération cible</p>
+      <div class="loop">
+        <div class="loop-step">
+          <div class="loop-node" style="background:#e0e7ff;border-color:#6366f1;">🖥️</div>
+          <span class="loop-lbl">Prototype<br>V<sub>n</sub></span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#d1fae5;border-color:#059669;">🎙️</div>
+          <span class="loop-lbl">Workshop<br>capturé</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#dbeafe;border-color:#2563eb;">📝</div>
+          <span class="loop-lbl">Transcript<br>IA</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#fef3c7;border-color:#d97706;">📋</div>
+          <span class="loop-lbl">Synthèse<br>structurée</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#ede9fe;border-color:#8b5cf6;">📄</div>
+          <span class="loop-lbl">Specs<br>MAJ</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#f3f4f6;border-color:#9ca3af;">📌</div>
+          <span class="loop-lbl">Tickets<br>Linear</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#dbeafe;border-color:#2563eb;">🤖</div>
+          <span class="loop-lbl">Agents<br>IA</span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#d1fae5;border-color:#059669;">🚀</div>
+          <span class="loop-lbl">Prototype<br>V<sub>n+1</sub></span>
+        </div>
+        <span class="loop-arr">→</span>
+        <div class="loop-step">
+          <div class="loop-node" style="background:#fce7f3;border-color:#ec4899;">👤</div>
+          <span class="loop-lbl">Tests<br>utilisateurs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 5. Livrable Markdown ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Livrable à produire après chaque atelier capturé</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">Format recommandé&nbsp;: Markdown. Structure standardisée pour permettre aux agents de consommer et d'agir directement sur le contenu.</p>
+
+    <div class="struct-card">
+      <div class="struct-head">Structure recommandée — Synthèse atelier Markdown</div>
+      <div class="struct-body">
+        <div class="struct-item"><span class="struct-num">01</span> Contexte</div>
+        <div class="struct-item"><span class="struct-num">02</span> Participants</div>
+        <div class="struct-item"><span class="struct-num">03</span> Objectifs de l'atelier</div>
+        <div class="struct-item"><span class="struct-num">04</span> Sujets discutés</div>
+        <div class="struct-item"><span class="struct-num">05</span> Décisions prises</div>
+        <div class="struct-item"><span class="struct-num">06</span> Hypothèses à tester</div>
+        <div class="struct-item"><span class="struct-num">07</span> Points de désaccord / incertitudes</div>
+        <div class="struct-item"><span class="struct-num">08</span> Impacts sur le parcours client</div>
+        <div class="struct-item"><span class="struct-num">09</span> Impacts sur le parcours agent / métier</div>
+        <div class="struct-item"><span class="struct-num">10</span> Actions à mener</div>
+        <div class="struct-item"><span class="struct-num">11</span> Mises à jour PRD proposées</div>
+        <div class="struct-item"><span class="struct-num">12</span> Tickets Linear / Jira proposés</div>
+        <div class="struct-item"><span class="struct-num">13</span> Questions ouvertes</div>
+        <div class="struct-item"><span class="struct-num">14</span> Risques</div>
+        <div class="struct-item"><span class="struct-num">15</span> Prochaine boucle</div>
+        <div class="struct-item"><span class="struct-num">16</span> À valider humainement</div>
+      </div>
+    </div>
+
+    <!-- ── 6. Prompt synthèse ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Prompt — Synthèse structurée d'atelier</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">À soumettre à un agent avec la transcription brute de l'atelier en entrée.</p>
+
+    <div class="pb" style="margin-top:var(--sp-lg);">
+      <div class="pb-head">
+        <span class="pb-lbl">Prompt — Synthèse atelier</span>
+        <button class="pb-copy" onclick="cpPrompt(this)">Copier</button>
+      </div>
+      <pre><code>Tu es un PM senior et un analyste produit.
+
+À partir de la transcription brute de cet atelier, produis une synthèse
+structurée au format Markdown.
+
+Objectifs :
+1. Résumer le contexte de l'atelier
+2. Identifier les décisions prises
+3. Lister les hypothèses produit à tester
+4. Extraire les points de désaccord ou d'incertitude
+5. Identifier les impacts sur le parcours client
+6. Identifier les impacts sur le parcours agent / métier
+7. Lister les actions à mener
+8. Proposer les mises à jour à apporter au PRD
+9. Proposer les tickets Linear / Jira à créer
+10. Identifier les questions ouvertes pour le prochain atelier
+
+Contraintes :
+- Distinguer clairement faits, décisions, hypothèses et recommandations
+- Ne pas inventer de décision non explicitement formulée
+- Signaler les ambiguïtés
+- Utiliser un format actionnable
+- Produire une section "À valider humainement"</code></pre>
+    </div>
+
+    <!-- ── 7. Prompt tickets ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Prompt — Conversion en tickets</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">À utiliser après la synthèse, en fournissant le PRD actuel comme contexte additionnel.</p>
+
+    <div class="pb" style="margin-top:var(--sp-lg);">
+      <div class="pb-head">
+        <span class="pb-lbl">Prompt — Génération de tickets Linear / Jira</span>
+        <button class="pb-copy" onclick="cpPrompt(this)">Copier</button>
+      </div>
+      <pre><code>À partir de cette synthèse d'atelier et du PRD actuel :
+
+1. Identifie les évolutions produit à créer
+2. Regroupe-les par epic ou module
+3. Pour chaque ticket, fournis :
+   - titre
+   - contexte
+   - objectif
+   - description fonctionnelle
+   - critères d'acceptation
+   - dépendances
+   - criticité
+   - lien avec la décision d'atelier
+   - questions ouvertes
+4. Indique les tickets pouvant être pris en charge par un agent IA
+5. Indique les tickets nécessitant une validation humaine avant exécution
+
+Format : tableau Markdown + détail par ticket.</code></pre>
+    </div>
+
+    <!-- ── 8. Gouvernance ── -->
+    <h3 style="margin-top:var(--sp-2xl);">Points de vigilance — Gouvernance</h3>
+    <p style="margin-top:.6rem;font-size:.93rem;color:var(--text-secondary);max-width:var(--text-w);">Enregistrer des échanges sans cadre, c'est une dérive rapide. Cette capacité nécessite un cadre explicite avant tout déploiement.</p>
+
+    <div class="callout c-warn" style="margin-top:var(--sp-lg);">
+      <span class="c-icon">⚠️</span>
+      <div>
+        <div class="c-title">Règle simple</div>
+        <div class="c-text">La voix accélère la capture. Elle ne supprime pas la responsabilité de validation. Aucun ticket, aucune spec et aucune mise à jour PRD ne doit être poussée sans relecture humaine.</div>
+      </div>
+    </div>
+
+    <div class="govern-grid">
+      <div class="govern-item"><div class="govern-dot"></div>Consentement explicite des participants avant enregistrement</div>
+      <div class="govern-item"><div class="govern-dot"></div>Confidentialité des échanges et des données partagées</div>
+      <div class="govern-item"><div class="govern-dot"></div>Suppression des éléments hors sujet ou sensibles avant traitement</div>
+      <div class="govern-item"><div class="govern-dot"></div>Droit d'enregistrement et durée de conservation définis</div>
+      <div class="govern-item"><div class="govern-dot"></div>Accès aux transcriptions limité aux personnes concernées</div>
+      <div class="govern-item"><div class="govern-dot"></div>Outils autorisés vs. outils externes non conformes</div>
+      <div class="govern-item"><div class="govern-dot"></div>Environnement interne ou externe — pas de mélange par défaut</div>
+      <div class="govern-item"><div class="govern-dot"></div>Validation humaine avant création de tickets ou MAJ de specs</div>
+      <div class="govern-item"><div class="govern-dot"></div>L'IA propose, l'humain valide et assume la décision finale</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     VISION END-TO-END — 6 BOUCLES D'UNE AI SQUAD
+============================================================ -->
+<section class="section" id="boucles" style="background:var(--bg-warm);">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Vision end-to-end</span>
+      <h2 class="section-title">Les 6 boucles d'une AI Squad</h2>
+      <p class="section-sub">L'AI-First Delivery Sprint n'est pas seulement une méthode d'accélération du cadrage. C'est une chaîne de delivery complète — de la recherche initiale au retour terrain — où les agents opèrent à chaque étape pendant que les humains gardent les arbitrages de sens, de valeur, de risque et de responsabilité.</p>
+    </div>
+
+    <p class="boucles-intro">La plupart des équipes qui adoptent l'IA s'arrêtent à mi-chemin : elles accélèrent le cadrage et la conception, mais perdent le fil entre le prototype et le code livré. Résultat : une chaîne incomplète qui reproduit les mêmes frictions qu'avant. Les 6 boucles ci-dessous couvrent l'intégralité du cycle, avec une attention particulière aux trois phases souvent manquantes&nbsp;: <strong>Prototype to plan</strong>, <strong>Build to verify</strong> et <strong>Launch to learn</strong>.</p>
+
+    <!-- 6 boucle cards -->
+    <div class="boucle-grid">
+
+      <!-- Boucle 1 -->
+      <div class="boucle-card">
+        <div class="boucle-header">
+          <div class="boucle-num">1</div>
+          <div class="boucle-name"><span>Boucle 1</span><strong>Research to Brief</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>Verbatims utilisateurs, données marché, benchmarks, logs d'usage existants.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Synthétise les verbatims en insights atomiques, détecte les patterns, propose une formulation du problème, génère un premier draft de brief projet.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Valide la sélection des verbatims significatifs, arbitre le périmètre du problème à traiter, signe le brief.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>Brief projet structuré, synthèse recherche, question stratégique validée.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boucle 2 -->
+      <div class="boucle-card">
+        <div class="boucle-header">
+          <div class="boucle-num">2</div>
+          <div class="boucle-name"><span>Boucle 2</span><strong>Brief to Concept</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>Brief validé, insights recherche, contraintes techniques et business.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Génère plusieurs pistes conceptuelles, propose des formulations de proposition de valeur, rédige les user stories initiales, anticipe les objections.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Choisit le concept à explorer, ajuste la proposition de valeur, arbitre les compromis entre ambition et faisabilité.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>Vision produit, proposition de valeur testable, user stories de niveau épique.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boucle 3 -->
+      <div class="boucle-card">
+        <div class="boucle-header">
+          <div class="boucle-num">3</div>
+          <div class="boucle-name"><span>Boucle 3</span><strong>Concept to Prototype</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>Vision produit, user stories, composants design system, contraintes UX.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Génère le code du prototype (React/HTML), injecte des données réelles via APIs, produit les écrans en quelques itérations rapides sur instruction vocale ou textuelle.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Définit les scénarios à tester, valide la conformité UX, décide ce qui sera testé utilisateurs.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>Prototype fonctionnel déployé, scénarios de test UX, données d'usage simulées.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boucle 4 — critique -->
+      <div class="boucle-card bc-critical">
+        <div class="boucle-header">
+          <div class="boucle-num">4</div>
+          <div class="boucle-name"><span>Boucle 4</span><strong>Prototype to Plan</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-crit-tag">🔗 Chaînon critique — souvent absent</div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>Résultats tests UX, insights verbatims, prototype v1, décisions de design validées.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Transforme les apprentissages du prototype en PRD structuré, décompose en user stories estimables, génère le backlog priorisé et les critères d'acceptance.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Arbitre les priorités, valide la faisabilité technique avec les devs, tranche sur le scope du premier sprint.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>PRD complet, backlog sprint-ready, plan d'implémentation, architecture cible esquissée.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boucle 5 — critique -->
+      <div class="boucle-card bc-critical">
+        <div class="boucle-header">
+          <div class="boucle-num">5</div>
+          <div class="boucle-name"><span>Boucle 5</span><strong>Build to Verify</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-crit-tag warn">⚡ Plus l'IA accélère, plus il faut vérifier</div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>User stories, critères d'acceptance, architecture cible, design system tokens.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Génère le code métier, écrit les tests unitaires et E2E (Playwright), produit les PR avec description, relit le code pair-to-pair, maintient la documentation technique à jour.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Valide les PR critiques, arbitre les compromis techniques, décide ce qui peut passer en production.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>Code livré + tests E2E (Playwright) + PR documentées + DORA metrics trackées.</p>
+          </div>
+          <div style="margin-top:.6rem;padding:.7rem .9rem;background:var(--primary-mid);border-radius:var(--r-sm);font-size:.83rem;color:var(--primary);font-style:italic;line-height:1.55;border-left:3px solid var(--primary);">
+            "Chaque accélération de production par l'IA doit être accompagnée d'un mécanisme de vérification au moins équivalent — idéalement supérieur."
+          </div>
+        </div>
+      </div>
+
+      <!-- Boucle 6 -->
+      <div class="boucle-card">
+        <div class="boucle-header">
+          <div class="boucle-num">6</div>
+          <div class="boucle-name"><span>Boucle 6</span><strong>Launch to Learn</strong></div>
+        </div>
+        <div class="boucle-body">
+          <div class="boucle-row">
+            <span class="boucle-tag bt-in">Inputs</span>
+            <p>Métriques d'usage réel, feedbacks terrain, DORA metrics (lead time, déploiements, taux d'échec, MTTR).</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-ia">Rôle IA</span>
+            <p>Analyse les logs et signaux d'usage, corrèle les métriques DORA avec les cycles de delivery, synthétise les apprentissages en insights actionnables, propose les ajustements roadmap.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-hum">Humain</span>
+            <p>Interprète les insights dans leur contexte stratégique, décide de la prochaine boucle de discovery, porte la responsabilité des arbitrages produit.</p>
+          </div>
+          <div class="boucle-row">
+            <span class="boucle-tag bt-out">Outputs</span>
+            <p>Rapport d'apprentissage, roadmap mise à jour, nouvelle boucle Research to Brief déclenchée.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /boucle-grid -->
+
+    <!-- DORA callout -->
+    <div class="callout c-info" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">📊</span>
+      <div>
+        <div class="c-title">Les 4 métriques DORA — indicateurs de santé du delivery IA-First</div>
+        <div class="c-text" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.5rem .75rem;margin-top:.6rem;">
+          <span><strong>Lead time for changes</strong> — temps entre le premier commit et la mise en prod</span>
+          <span><strong>Deployment frequency</strong> — fréquence des déploiements en production</span>
+          <span><strong>Change failure rate</strong> — proportion de déploiements causant un incident</span>
+          <span><strong>Failed deployment recovery time (MTTR)</strong> — temps de rétablissement après un échec</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau récapitulatif -->
+    <h3 style="margin-top:var(--sp-2xl);">Tableau de synthèse</h3>
+    <div class="recap-table-wrap">
+      <table class="recap-table">
+        <thead>
+          <tr>
+            <th>Boucle</th>
+            <th>Question clé</th>
+            <th>Livrable pivot</th>
+            <th>Agent principal</th>
+            <th>Décision humaine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-row">1</span> Research to Brief</td>
+            <td>Que sait-on vraiment&nbsp;?</td>
+            <td>Brief projet</td>
+            <td>PM / Research</td>
+            <td>Quel problème traiter&nbsp;?</td>
+          </tr>
+          <tr>
+            <td><span class="badge-row">2</span> Brief to Concept</td>
+            <td>Quelle proposition de valeur tester&nbsp;?</td>
+            <td>Vision produit</td>
+            <td>PM / Product Designer</td>
+            <td>Quel concept explorer&nbsp;?</td>
+          </tr>
+          <tr>
+            <td><span class="badge-row">3</span> Concept to Prototype</td>
+            <td>Comment rendre l'expérience tangible&nbsp;?</td>
+            <td>Prototype publié</td>
+            <td>Front-end / Designer</td>
+            <td>Que tester&nbsp;?</td>
+          </tr>
+          <tr>
+            <td><span class="badge-row">4</span> Prototype to Plan</td>
+            <td>Que nous apprend le prototype&nbsp;?</td>
+            <td>PRD + backlog</td>
+            <td>PO / PRD / Backlog</td>
+            <td>Que construire&nbsp;?</td>
+          </tr>
+          <tr>
+            <td><span class="badge-row">5</span> Build to Verify</td>
+            <td>Comment produire sans perdre en qualité&nbsp;?</td>
+            <td>Code + tests + PR</td>
+            <td>Dev / QA</td>
+            <td>Qu'est-ce qui peut passer&nbsp;?</td>
+          </tr>
+          <tr>
+            <td><span class="badge-row">6</span> Launch to Learn</td>
+            <td>Que dit l'usage réel&nbsp;?</td>
+            <td>Insights terrain + roadmap</td>
+            <td>Research / Analytics</td>
+            <td>Que faire ensuite&nbsp;?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Formule cible -->
+    <h3 style="margin-top:var(--sp-2xl);">La formule cible</h3>
+    <div class="formule-chain">
+      <div class="fc-step"><span class="fc-pill">Research to Brief</span><span class="fc-arr">→</span></div>
+      <div class="fc-step"><span class="fc-pill">Brief to Concept</span><span class="fc-arr">→</span></div>
+      <div class="fc-step"><span class="fc-pill">Concept to Prototype</span><span class="fc-arr">→</span></div>
+      <div class="fc-step"><span class="fc-pill fc-accent">Prototype to Plan</span><span class="fc-arr">→</span></div>
+      <div class="fc-step"><span class="fc-pill fc-accent">Build to Verify</span><span class="fc-arr">→</span></div>
+      <div class="fc-step"><span class="fc-pill">Launch to Learn</span><span class="fc-arr">→</span></div>
+      <span class="fc-loop">↺ nouvelle boucle de discovery</span>
+    </div>
+
+    <!-- Message clé -->
+    <div class="callout c-rule" style="margin-top:var(--sp-xl);">
+      <span class="c-icon">🔁</span>
+      <div>
+        <div class="c-title">La vision complète</div>
+        <div class="c-text">L'AI-First Delivery Sprint n'est pas seulement une méthode d'accélération du cadrage. C'est une chaîne de delivery complète où les agents aident à produire, tester, relire, documenter et apprendre — pendant que les humains gardent les arbitrages de sens, de valeur, de risque et de responsabilité.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     9. RÔLES HUMAINS VS AGENTS
+============================================================ -->
+<section class="section section-alt" id="roles">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Rôles &amp; responsabilités</span>
+      <h2 class="section-title">Humains vs agents IA</h2>
+      <p class="section-sub">L'IA augmente les capacités de l'équipe. Elle ne remplace pas le jugement, l'empathie et la décision stratégique — qui restent irréductiblement humains.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Activité</th>
+            <th>Rôle humain</th>
+            <th>Rôle agent IA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cadrage stratégique</strong></td>
+            <td class="td-h">Décide des hypothèses, fixe les priorités, arbitre les contraintes</td>
+            <td class="td-ai">Structure la connaissance, propose des angles, identifie les gaps</td>
+          </tr>
+          <tr>
+            <td><strong>Animation workshop</strong></td>
+            <td class="td-h">Facilite, observe, gère la dynamique de groupe</td>
+            <td class="td-ai">Prend des notes structurées, propose des synthèses, génère des HMW</td>
+          </tr>
+          <tr>
+            <td><strong>Entretiens utilisateurs</strong></td>
+            <td class="td-h">Conduit l'entretien, crée le lien de confiance, capte le non-verbal</td>
+            <td class="td-ai">Note, transcrit, identifie les patterns émergents entre sessions</td>
+          </tr>
+          <tr>
+            <td><strong>Design produit</strong></td>
+            <td class="td-h">Prend les décisions esthétiques et stratégiques de design</td>
+            <td class="td-ai">Génère des propositions de parcours, itère les maquettes, propose des variantes</td>
+          </tr>
+          <tr>
+            <td><strong>Rédaction PRD</strong></td>
+            <td class="td-h">Valide les specs, arbitre les ambiguïtés, approuve le livrable</td>
+            <td class="td-ai">Rédige, structure, maintient à jour, vérifie la cohérence interne</td>
+          </tr>
+          <tr>
+            <td><strong>Prototypage</strong></td>
+            <td class="td-h">Définit l'objectif du prototype, valide la direction technique</td>
+            <td class="td-ai">Génère le code, déploie, propose des alternatives d'implémentation</td>
+          </tr>
+          <tr>
+            <td><strong>Analyse des tests</strong></td>
+            <td class="td-h">Interprète les insights, décide des priorités d'amélioration</td>
+            <td class="td-ai">Synthétise les verbatims, catégorise, atomise, identifie les patterns</td>
+          </tr>
+          <tr>
+            <td><strong>Décision finale</strong></td>
+            <td class="td-h"><strong>Toujours humain — l'IA ne décide pas</strong></td>
+            <td class="td-ai">Fournit les éléments pour décider, modélise les conséquences possibles</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hbox">
+      <p>💡 <strong>Principe directeur :</strong> L'IA est le meilleur assistant qu'une équipe produit puisse avoir — infatigable, exhaustif, structuré, disponible 24/7. Mais l'équipe reste le chef d'orchestre. La valeur de l'AI-First Sprint tient précisément à cette combinaison : la puissance computationnelle de l'IA au service du jugement humain.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     10. RÈGLES D'OR
+============================================================ -->
+<section class="section" id="regles">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Principes fondateurs</span>
+      <h2 class="section-title">Les règles d'or</h2>
+      <p class="section-sub">Six règles qui distinguent un sprint AI-first réussi d'une démonstration technologique sans lendemain.</p>
+    </div>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="r-num">Règle 01</div>
+        <div class="r-title">Ne jamais commencer par l'outil</div>
+        <p class="r-text">L'outil sert la démarche. Commencer par définir clairement le problème à résoudre et la valeur à créer. L'IA vient ensuite, comme amplificateur — jamais comme justification du projet.</p>
+      </div>
+      <div class="rule-card">
+        <div class="r-num">Règle 02</div>
+        <div class="r-title">Ne pas confondre vitesse et précipitation</div>
+        <p class="r-text">L'IA permet d'aller plus vite. Cela ne dispense pas de penser. Les raccourcis sur le cadrage ou la compréhension des utilisateurs se paient toujours — même avec l'IA.</p>
+      </div>
+      <div class="rule-card">
+        <div class="r-num">Règle 03</div>
+        <div class="r-title">Toujours produire un objet tangible</div>
+        <p class="r-text">Chaque étape, chaque demi-journée de sprint produit quelque chose de concret. Pas de "on a travaillé sur..." sans artefact livrable et partageable à la fin.</p>
+      </div>
+      <div class="rule-card">
+        <div class="r-num">Règle 04</div>
+        <div class="r-title">Garder l'humain dans l'arbitrage</div>
+        <p class="r-text">L'IA propose, structure et génère. L'humain décide, priorise et assume. Aucune décision stratégique ne doit être déléguée à l'IA sans validation explicite de l'équipe.</p>
+      </div>
+      <div class="rule-card">
+        <div class="r-num">Règle 05</div>
+        <div class="r-title">Documenter en continu</div>
+        <p class="r-text">La documentation n'est pas une tâche de fin de sprint. Elle est produite au fil de l'eau par les agents. À tout moment, elle reflète l'état actuel du produit — pas celui d'il y a trois semaines.</p>
+      </div>
+      <div class="rule-card">
+        <div class="r-num">Règle 06</div>
+        <div class="r-title">Connecter vision, prototype et backlog</div>
+        <p class="r-text">La vision stratégique, le prototype fonctionnel et le backlog opérationnel doivent être cohérents et synchronisés. Leur déconnexion est le premier signe d'un sprint qui dérive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     11. BÉNÉFICES
+============================================================ -->
+<section class="section section-alt" id="benefices">
+  <div class="section-inner">
+    <div class="sh">
+      <span class="label">Bénéfices attendus</span>
+      <h2 class="section-title">Ce que cette démarche change concrètement</h2>
+      <p class="section-sub">Les bénéfices s'organisent autour de quatre dimensions : innovation, delivery, organisation et communication au Board Innovation.</p>
+    </div>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="b-cat bi">Innovation</div>
+        <ul class="b-list">
+          <li>Exploration plus large du champ des possibles en moins de temps</li>
+          <li>Idées testées sur utilisateurs réels dès J+2, pas J+30</li>
+          <li>Capitalisation des apprentissages sprint après sprint</li>
+          <li>Détection précoce des fausses bonnes idées</li>
+          <li>Parcours agent systématiquement envisagés dès le départ</li>
+        </ul>
+      </div>
+
+      <div class="benefit-card">
+        <div class="b-cat bd">Delivery</div>
+        <ul class="b-list">
+          <li>Réduction du time-to-prototype de 70% en moyenne</li>
+          <li>PRD toujours synchronisé avec le code et les maquettes</li>
+          <li>Backlog priorisé connecté à la vision, pas aux urgences du jour</li>
+          <li>Moins de réunions de coordination, plus de livrables tangibles</li>
+          <li>Qualité documentaire maintenue sans effort supplémentaire</li>
+        </ul>
+      </div>
+
+      <div class="benefit-card">
+        <div class="b-cat bo">Organisation</div>
+        <ul class="b-list">
+          <li>Les équipes passent moins de temps sur les tâches à faible valeur ajoutée</li>
+          <li>Montée en compétence continue via les agents spécialisés</li>
+          <li>Réduction des silos : la base de connaissance est partagée</li>
+          <li>Onboarding accéléré des nouveaux membres d'équipe</li>
+          <li>Standardisation des pratiques sans bureaucratisation</li>
+        </ul>
+      </div>
+
+      <div class="benefit-card">
+        <div class="b-cat bb">Board Innovation</div>
+        <ul class="b-list">
+          <li>Prototypes démontrables à chaque session de revue</li>
+          <li>Décisions appuyées sur des données utilisateurs réelles et fraîches</li>
+          <li>Traçabilité complète : de la vision au ticket en passant par le test</li>
+          <li>ROI visible dès les premières semaines d'adoption</li>
+          <li>Crédibilité renforcée : on montre, on ne raconte plus</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     12. CONCLUSION — MESSAGE BOARD
+============================================================ -->
+<section class="conclusion" id="conclusion">
+  <div class="concl-inner">
+    <span class="concl-label">Message Board Innovation</span>
+
+    <h2 class="concl-title">
+      La connaissance dispersée<br>est votre actif le plus sous-exploité.
+    </h2>
+
+    <p class="concl-text">
+      Chaque organisation accumule des études, des entretiens, des données marché, des intuitions d'experts. Ces assets coûtent cher à produire et dorment dans des dossiers partagés. L'AI-First Delivery Sprint transforme ce capital dormant en carburant pour une exécution produit rapide, rigoureuse et continue.
+    </p>
+
+    <blockquote class="concl-quote">
+      "Ce n'est pas l'IA qui va changer votre delivery. C'est la décision de travailler autrement avec elle — en lui donnant le bon contexte, les bons rôles et les bons garde-fous — qui fera la différence entre une équipe qui parle d'IA et une équipe qui exécute avec l'IA."
+    </blockquote>
+
+    <p class="concl-text">
+      L'AI-First Delivery Sprint n'est pas une méthode de plus. C'est un operating model complet, industrialisable, adapté aux exigences de gouvernance d'une grande organisation — et aux ambitions d'une startup native IA. Il intègre le pilotage par agents, la rétro-documentation visuelle, les personas synthétiques, le Real Data Prototype et la documentation IA-native en Markdown. Il est prêt à être déployé. La question n'est pas de savoir si vous devez adopter cette démarche. La question est : combien de sprints allez-vous manquer avant de le faire ?
+    </p>
+
+    <div class="concl-stats">
+      <div class="cstat">
+        <div class="cstat-lbl">Démarrer en</div>
+        <div class="cstat-val">2 semaines</div>
+        <div class="cstat-sub">Premier sprint opérationnel</div>
+      </div>
+      <div class="cstat">
+        <div class="cstat-lbl">Prototype livrable</div>
+        <div class="cstat-val" style="color:#93c5fd;">J+3 à J+5</div>
+        <div class="cstat-sub">Testable par de vrais utilisateurs</div>
+      </div>
+      <div class="cstat">
+        <div class="cstat-lbl">Capitalisation</div>
+        <div class="cstat-val" style="color:#a5b4fc;">Continue</div>
+        <div class="cstat-sub">Chaque sprint enrichit le suivant</div>
+      </div>
+      <div class="cstat">
+        <div class="cstat-lbl">Décision humaine</div>
+        <div class="cstat-val" style="color:#86efac;">100%</div>
+        <div class="cstat-sub">L'IA amplifie, l'humain arbitre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="f-brand">AI-First Delivery Sprint · Playbook</div>
+    <div class="f-text">Operating model Innovation Board · 2026</div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT MINIMAL
+============================================================ -->
+<script>
+  /* Barre de progression */
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY;
+    const t = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('prog').style.width = (s / t * 100) + '%';
+  }, { passive: true });
+
+  /* Lien actif dans la nav */
+  const secs  = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-link');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-58px 0px -42% 0px' });
+  secs.forEach(s => io.observe(s));
+
+  /* Copier un prompt */
+  function cpPrompt(btn) {
+    const code = btn.closest('.pb').querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copié ✓';
+      btn.style.color = '#86efac';
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2200);
+    }).catch(() => {
+      btn.textContent = 'Échec';
+      setTimeout(() => { btn.textContent = 'Copier'; }, 1800);
+    });
+  }
+</script>
+
+</body>
+</html>
