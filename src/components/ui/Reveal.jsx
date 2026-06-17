@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { usePresentationMode } from '../presentation/PresentationContext'
 
-// Scroll-triggered reveal primitive. Fades + slides children into view once,
-// and degrades to an instant render when reduced-motion is requested.
+// Scroll-triggered reveal primitive. Fades + slides children into view once.
+// Degrades to an instant render when reduced-motion is requested OR when shown
+// inside the presentation deck (where content must be visible immediately and
+// may sit inside a horizontal carousel where whileInView never fires).
 export function Reveal({
   children,
   delay = 0,
@@ -12,9 +15,10 @@ export function Reveal({
   ...props
 }) {
   const reduced = useReducedMotion()
+  const presentation = usePresentationMode()
   const MotionTag = motion[as] ?? motion.div
 
-  if (reduced) {
+  if (reduced || presentation) {
     const Tag = as
     return (
       <Tag className={className} {...props}>

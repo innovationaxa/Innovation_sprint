@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const boucles = [
   {
@@ -108,7 +109,7 @@ export function Boucles() {
         </p>
       </Reveal>
 
-      <div className="boucle-grid">
+      <CardDeck gridClassName="boucle-grid" perView={2}>
         {boucles.map((b, i) => (
           <Reveal
             as="div"
@@ -155,7 +156,7 @@ export function Boucles() {
             </div>
           </Reveal>
         ))}
-      </div>
+      </CardDeck>
 
       <Reveal>
         <div className="callout c-info" style={{ marginTop: 'var(--sp-xl)' }}>

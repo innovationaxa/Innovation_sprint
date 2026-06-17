@@ -145,3 +145,43 @@
 .media-caption { font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 30px; color: #fff; margin-top: 26px; line-height: 1.35; }
 .media-caption.lines { font-size: 24px; }
 .media-caption.lines p { margin: 4px 0; }
+
+/* ============================================================
+   DOC SLIDES — real editorial sections shown one per slide
+============================================================ */
+.deck-doc {
+  position: absolute; inset: 0; overflow-y: auto;
+  background: var(--bg); color: var(--text);
+}
+.deck-doc .section { padding: 44px 56px; border: none !important; }
+.deck-doc .section-inner { max-width: 1100px; }
+.deck-doc .sh { margin-bottom: 22px; }
+.deck-doc .section-title { margin-bottom: 12px; }
+.deck-doc .cards-grid, .deck-doc .stepper { margin-top: 22px; }
+
+/* ============================================================
+   CAROUSEL (presentation card decks)
+============================================================ */
+.carousel { position: relative; padding: 4px 46px; }
+.carousel-track {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; padding: 8px 4px 14px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-item { scroll-snap-align: start; min-width: 0; }
+.carousel-nav {
+  position: absolute; top: 44%; transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm); color: var(--text);
+  font-size: 24px; line-height: 1; cursor: pointer;
+  display: grid; place-items: center; z-index: 3;
+}
+.carousel-nav:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.carousel-nav:disabled { opacity: .3; cursor: default; }
+.carousel-nav.prev { left: 0; }
+.carousel-nav.next { right: 0; }
+.carousel-dots { display: flex; justify-content: center; gap: 8px; margin-top: 6px; }
+.carousel-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--border); cursor: pointer; padding: 0; transition: all .2s; }
+.carousel-dot.active { background: var(--primary); transform: scale(1.25); }

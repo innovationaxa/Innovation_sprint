@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 import { PromptBlock } from '../ui/PromptBlock'
 
 const agents = [
@@ -84,7 +85,7 @@ export function Agents() {
       </Reveal>
 
       <Reveal>
-        <div className="agents-grid">
+        <CardDeck gridClassName="agents-grid" perView={4}>
           {agents.map((a) => (
             <div className="agent-chip" key={a.name}>
               <div className="agent-av" style={{ background: a.bg }}>{a.icon}</div>
@@ -94,7 +95,7 @@ export function Agents() {
               </div>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
 
       <Reveal>
@@ -129,14 +130,14 @@ export function Agents() {
           de les activer pour doter un agent d'une expertise spécialisée
           immédiatement opérationnelle.
         </p>
-        <div className="skills-lib">
+        <CardDeck gridClassName="skills-lib" perView={5}>
           {skills.map(([icon, name]) => (
             <div className="skill-tile" key={name}>
               <span className="st-icon">{icon}</span>
               <div className="st-name">{name}</div>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
     </Section>
   )

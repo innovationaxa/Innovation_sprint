@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 import { PromptBlock } from '../ui/PromptBlock'
 
 const tools = [
@@ -138,7 +139,7 @@ export function Voix() {
           LLM, ils permettent de transformer n'importe quel échange oral en matière
           structurée.
         </p>
-        <div className="cards-grid" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))' }}>
+        <CardDeck gridClassName="cards-grid" perView={4} gridStyle={{ gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))' }}>
           {tools.map((c) => (
             <div className="card" key={c.title}>
               <div className={`card-bar ${c.bar}`} />
@@ -147,7 +148,7 @@ export function Voix() {
               <p className="card-text">{c.text}</p>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
 
       {/* ── 2. Le vrai changement ── */}

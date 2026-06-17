@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const phases = [
   { n: 1, t: 'Cadrage augmenté', d: "L'IA génère les objectifs de recherche depuis la base de connaissance : besoins non adressés, hypothèses à valider, points de friction pressentis." },
@@ -30,7 +31,7 @@ export function Tests() {
         et sa précision.
       </SectionHeader>
 
-      <div className="ux-phases">
+      <CardDeck gridClassName="ux-phases" perView={4}>
         {phases.map((p, i) => (
           <Reveal as="div" key={p.n} delay={i * 0.05} className="ux-phase">
             <div className="up-n">{p.n}</div>
@@ -38,7 +39,7 @@ export function Tests() {
             <p className="up-d">{p.d}</p>
           </Reveal>
         ))}
-      </div>
+      </CardDeck>
 
       <Reveal>
         <div
