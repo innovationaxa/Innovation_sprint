@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@import "./playbook.css";
+
+/* Dark mode driven by the `dark` class on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --color-ink: #1e1b18;
+  --color-paper: #f7f4ee;
+  --color-primary: #2563eb;
+  --color-secondary: #6366f1;
+  --color-accent: #8b5cf6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respect reduced-motion preferences globally */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
