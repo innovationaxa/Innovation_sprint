@@ -1,14 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
 import { useKeyboardNav } from '../../hooks/useKeyboardNav'
+import { SlideStage } from './SlideStage'
 import { SlideControls } from './SlideControls'
+import { deck } from '../../data/deck.jsx'
 
-// Fullscreen keynote overlay. Renders one section per slide, reusing the SAME
-// section components as the scroll view (single source of truth). Each slide is
-// independently scrollable. Keyboard-driven: ← → / space / Esc.
-export function PresentationMode({ sections, open, initialIndex = 0, onClose }) {
+// Fullscreen cinematic keynote. Renders the presentation `deck` one slide at a
+// time on a fit-to-viewport stage (no scroll). Keyboard-driven: ← → / space / Esc.
+export function PresentationMode({ open, initialIndex = 0, onClose }) {
   const [index, setIndex] = useState(initialIndex)
-  const total = sections.length
+  const total = deck.length
 
   useEffect(() => {
     if (open) setIndex(initialIndex)
@@ -23,39 +24,45 @@ export function PresentationMode({ sections, open, initialIndex = 0, onClose }) 
   )
 
   if (!open) return null
-  const section = sections[index]
-  const Slide = section.Component
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex flex-col bg-paper"
+      className="deck-root"
     >
-      <div className="h-1 shrink-0 bg-black/10">
+      <div className="h-1 shrink-0 bg-white/10">
         <div
-          className="h-full bg-[var(--primary)] transition-all"
+          className="h-full bg-[#6ea0ff] transition-all"
           style={{ width: `${((index + 1) / total) * 100}%` }}
         />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <SlideStage>
         <AnimatePresence mode="wait">
           <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -24 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            key={deck[index].id}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{ position: 'absolute', inset: 0 }}
           >
-            <Slide />
+            {deck[index].el}
           </motion.div>
         </AnimatePresence>
-      </div>
+      </SlideStage>
 
-      <div className="relative shrink-0 border-t border-black/10 bg-paper text-ink">
-        <SlideControls index={index} total={total} onPrev={prev} onNext={next} onExit={onClose} />
+      <div className="shrink-0 border-t border-white/10 text-white">
+        <SlideControls
+          index={index}
+          total={total}
+          label={deck[index].label}
+          onPrev={prev}
+          onNext={next}
+          onExit={onClose}
+        />
       </div>
     </motion.div>
   )

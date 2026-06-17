@@ -30,11 +30,7 @@ export default function App() {
 
       <AnimatePresence>
         {present && (
-          <PresentationMode
-            sections={sections}
-            open={present}
-            onClose={() => setPresent(false)}
-          />
+          <PresentationMode open={present} onClose={() => setPresent(false)} />
         )}
       </AnimatePresence>
     </ToastProvider>
