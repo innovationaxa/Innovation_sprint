@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const cards = [
   { bar: 'bar-blue', ic: 'ic-blue', icon: '🗂️', title: 'Base de connaissance projet', text: 'Tout ce qui est su sur le domaine, les utilisateurs, la concurrence, les contraintes techniques et réglementaires est structuré, indexé et interrogeable par les agents. La connaissance cesse d\'être tacite.' },
@@ -22,7 +23,7 @@ export function Ingredients() {
         cadrent, conçoivent et livrent des produits digitaux.
       </SectionHeader>
 
-      <div className="cards-grid">
+      <CardDeck gridClassName="cards-grid" perView={3}>
         {cards.map((c, i) => (
           <Reveal as="div" key={c.title} delay={i * 0.05} className="card">
             <div className={`card-bar ${c.bar}`} />
@@ -31,7 +32,7 @@ export function Ingredients() {
             <p className="card-text">{c.text}</p>
           </Reveal>
         ))}
-      </div>
+      </CardDeck>
     </Section>
   )
 }

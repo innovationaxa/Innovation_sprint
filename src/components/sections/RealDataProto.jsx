@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const before = [
   'Données fictives figées dans les maquettes',
@@ -51,13 +52,10 @@ export function RealDataProto() {
       </Reveal>
 
       <Reveal>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))',
-            gap: 'var(--sp-md)',
-            marginTop: 'var(--sp-xl)',
-          }}
+        <CardDeck
+          gridClassName="cards-grid"
+          perView={3}
+          gridStyle={{ marginTop: 'var(--sp-xl)' }}
         >
           {cards.map((c) => (
             <div className="card" key={c.title}>
@@ -67,7 +65,7 @@ export function RealDataProto() {
               <p className="card-text">{c.text}</p>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
 
       <Reveal>

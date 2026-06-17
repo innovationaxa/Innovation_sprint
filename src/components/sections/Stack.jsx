@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const stack = [
   { icon: '🤖', name: 'Claude / Codex', desc: 'Orchestration des agents, génération de code, analyse sémantique' },
@@ -38,7 +39,7 @@ export function Stack() {
       </SectionHeader>
 
       <Reveal>
-        <div className="stack-grid">
+        <CardDeck gridClassName="stack-grid" perView={4}>
           {stack.map((s) => (
             <div className="stack-item" key={s.name}>
               <span className="si-icon">{s.icon}</span>
@@ -46,7 +47,7 @@ export function Stack() {
               <span className="si-desc">{s.desc}</span>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
 
       <Reveal>
@@ -74,7 +75,7 @@ export function Stack() {
           analysent, produisent des livrables et documentent — sans réunion de
           coordination.
         </p>
-        <div className="cards-grid" style={{ marginTop: 'var(--sp-md)' }}>
+        <CardDeck gridClassName="cards-grid" perView={3} gridStyle={{ marginTop: 'var(--sp-md)' }}>
           {pilotage.map((c) => (
             <div className="card" key={c.title}>
               <div className={`card-bar ${c.bar}`} />
@@ -83,7 +84,7 @@ export function Stack() {
               <p className="card-text">{c.text}</p>
             </div>
           ))}
-        </div>
+        </CardDeck>
       </Reveal>
 
       <Reveal>

@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const benefices = [
   {
@@ -56,7 +57,7 @@ export function Benefices() {
         organisation et communication au Board Innovation.
       </SectionHeader>
 
-      <div className="benefits-grid">
+      <CardDeck gridClassName="benefits-grid" perView={2}>
         {benefices.map((b, i) => (
           <Reveal as="div" delay={i * 0.05} className="benefit-card" key={b.cat}>
             <div className={`b-cat ${b.cls}`}>{b.cat}</div>
@@ -67,7 +68,7 @@ export function Benefices() {
             </ul>
           </Reveal>
         ))}
-      </div>
+      </CardDeck>
     </Section>
   )
 }

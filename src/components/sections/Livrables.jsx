@@ -1,5 +1,6 @@
 import { Section, SectionHeader } from './_shared'
 import { Reveal } from '../ui/Reveal'
+import { CardDeck } from '../ui/CardDeck'
 
 const groups = [
   {
@@ -70,7 +71,7 @@ export function Livrables() {
         actionnables, documentés et maintenus par les agents.
       </SectionHeader>
 
-      <div className="deliv-grid">
+      <CardDeck gridClassName="deliv-grid" perView={3}>
         {groups.map((g, i) => (
           <Reveal as="div" key={g.title} delay={i * 0.05} className="deliv-group">
             <div className="dg-head">
@@ -84,7 +85,7 @@ export function Livrables() {
             </ul>
           </Reveal>
         ))}
-      </div>
+      </CardDeck>
     </Section>
   )
 }
