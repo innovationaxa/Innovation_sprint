@@ -4,10 +4,13 @@ import { StickyNav } from './components/layout/StickyNav'
 import { ProgressBar } from './components/layout/ProgressBar'
 import { PresentationMode } from './components/presentation/PresentationMode'
 import { ToastProvider } from './components/ui/Toast'
+import { Hero } from './components/sections/Hero'
+import { Conclusion } from './components/sections/Conclusion'
 import { sections } from './data/sections.jsx'
 
-// App shell: progress bar + sticky nav, the scrolling section stack, and the
-// fullscreen presentation overlay. All driven by the single `sections` source.
+// App shell: progress bar + sticky nav, the hero, the scrolling section stack,
+// the conclusion, and the fullscreen presentation overlay. The 15 navigable
+// sections are driven by the single `sections` source of truth.
 export default function App() {
   const [present, setPresent] = useState(false)
 
@@ -16,16 +19,14 @@ export default function App() {
       <ProgressBar />
       <StickyNav sections={sections} onPresent={() => setPresent(true)} />
 
-      <div>
-        {sections.map((s) => {
-          const Section = s.Component
-          return <Section key={s.id} />
-        })}
-      </div>
+      <Hero />
 
-      <footer className="py-12 text-center text-sm opacity-50">
-        AI for IT — Playbook · {new Date().getFullYear()}
-      </footer>
+      {sections.map((s) => {
+        const Section = s.Component
+        return <Section key={s.id} />
+      })}
+
+      <Conclusion />
 
       <AnimatePresence>
         {present && (

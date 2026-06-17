@@ -1,11 +1,18 @@
 <!doctype html>
-<html lang="fr" class="dark">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI for IT — Playbook</title>
-    <meta name="description" content="Playbook AI for IT — interactive, immersive." />
+    <title>AI-First Delivery Sprint — Playbook</title>
+    <meta name="description" content="AI-First Delivery Sprint — de la connaissance dispersée à une vision produit testable, documentée et exécutable." />
+    <script>
+      // Apply persisted theme before paint to avoid a flash.
+      try {
+        if (localStorage.getItem('theme') === 'dark')
+          document.documentElement.classList.add('dark')
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
